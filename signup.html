@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create your STACKLY account — Admin or Client registration.">
+  <title>Sign Up | STACKLY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { background: var(--dark-bg); }
+    .auth-page { padding-top: 80px; min-height: 100vh; }
+
+    /* Diagonal animated lines */
+    .auth-visual::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 40px,
+        rgba(245,166,35,0.025) 40px,
+        rgba(245,166,35,0.025) 41px
+      );
+      animation: diagonalMove2 18s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes diagonalMove2 {
+      0%   { transform: translate(0, 0); }
+      100% { transform: translate(-82px, 82px); }
+    }
+
+    /* Password strength meter */
+    .strength-meter {
+      margin-top: 6px;
+      height: 4px;
+      background: var(--gray-200);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .strength-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 4px;
+      transition: width 0.4s ease, background 0.4s ease;
+    }
+    .strength-label {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+    .strength-text {
+      font-size: 0.72rem;
+      color: var(--gray-400);
+      font-family: var(--font-accent);
+    }
+    .strength-hint {
+      font-size: 0.7rem;
+      color: var(--gray-400);
+      font-family: var(--font-accent);
+    }
+
+    /* Role cards (visual) */
+    .role-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 8px 0 4px;
+    }
+    .role-card-option {
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 16px 14px;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: center;
+      position: relative;
+    }
+    .role-card-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0; height: 0;
+    }
+    .role-card-option:has(input:checked),
+    .role-card-option.selected {
+      border-color: var(--gold);
+      background: rgba(245,166,35,0.05);
+    }
+    .role-card-option i { font-size: 1.6rem; color: var(--gray-400); margin-bottom: 8px; display: block; transition: var(--transition); }
+    .role-card-option:has(input:checked) i,
+    .role-card-option.selected i { color: var(--gold); }
+    .role-card-option span { font-size: 0.88rem; font-weight: 600; color: var(--charcoal); display: block; }
+    .role-card-option small { font-size: 0.72rem; color: var(--gray-500); }
+    .role-check {
+      position: absolute;
+      top: 8px; right: 8px;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: var(--black);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+    }
+    .role-card-option:has(input:checked) .role-check,
+    .role-card-option.selected .role-check { display: flex; }
+
+    /* Active signup button */
+    .btn-nav-signup { background: linear-gradient(135deg,var(--gold-light),var(--gold)) !important; }
+
+    /* Floating icons */
+    .visual-icon-float {
+      position: absolute;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      backdrop-filter: blur(8px);
+      animation: floatIcon2 4s ease-in-out infinite alternate;
+    }
+    .visual-icon-float i { color: var(--gold); font-size: 1.1rem; }
+    .visual-icon-float span { font-size: 0.8rem; color: rgba(255,255,255,0.7); white-space: nowrap; }
+    .vif-1 { top: 12%; right: 5%; animation-delay: 0s; }
+    .vif-2 { bottom: 18%; left: 5%; animation-delay: 1.2s; }
+    .vif-3 { top: 58%; right: 3%; animation-delay: 0.6s; }
+    @keyframes floatIcon2 {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(-12px); }
+    }
+
+    /* Step progress */
+    .form-step-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .step-bubble {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      flex-shrink: 0;
+    }
+    .step-bubble-info { font-size: 0.8rem; color: var(--gray-500); font-family: var(--font-accent); }
+    .step-bubble-info strong { color: var(--charcoal); }
+
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════ NAVBAR ═══════════════════ -->
+  <nav class="navbar scrolled" id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand" aria-label="STACKLY Home">
+        <div class="brand-logo" aria-hidden="true">S</div>
+        <div class="brand-info">
+          <span class="brand-name">STACKLY</span>
+          <span class="brand-tagline">Building Excellence</span>
+        </div>
+      </a>
+
+      <div class="nav-menu" id="navMenu">
+        <a href="index.html#home"     class="nav-link">Home</a>
+        <a href="index.html#about"    class="nav-link">About</a>
+        <a href="index.html#services" class="nav-link">Services</a>
+        <a href="index.html#projects" class="nav-link">Projects</a>
+        <a href="index.html#team"     class="nav-link">Team</a>
+        <a href="index.html#contact"  class="nav-link">Contact</a>
+      </div>
+
+      <div class="nav-auth">
+        <a href="login.html"  class="btn-nav-login"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="signup.html" class="btn-nav-signup"><i class="fas fa-user-plus"></i> Sign Up</a>
+      </div>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
+    <a href="index.html#home"     class="mobile-nav-link">Home</a>
+    <a href="index.html#about"    class="mobile-nav-link">About</a>
+    <a href="index.html#services" class="mobile-nav-link">Services</a>
+    <a href="index.html#projects" class="mobile-nav-link">Projects</a>
+    <a href="index.html#team"     class="mobile-nav-link">Team</a>
+    <a href="index.html#contact"  class="mobile-nav-link">Contact</a>
+    <div class="mobile-auth">
+      <a href="login.html"  class="btn-nav-login" style="display:flex;justify-content:center;"><i class="fas fa-sign-in-alt"></i> Login</a>
+      <a href="signup.html" class="btn-nav-signup" style="display:flex;justify-content:center;margin-top:8px;"><i class="fas fa-user-plus"></i> Sign Up</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════ AUTH PAGE ═══════════════════ -->
+  <main class="auth-page">
+    <div class="auth-split">
+
+      <!-- LEFT — Visual Brand Panel -->
+      <div class="auth-visual">
+        <div class="auth-visual-bg"></div>
+        <div class="auth-visual-glow"></div>
+
+        <div class="visual-icon-float vif-1">
+          <i class="fas fa-user-plus" aria-hidden="true"></i>
+          <span>Free Registration</span>
+        </div>
+        <div class="visual-icon-float vif-2">
+          <i class="fas fa-hard-hat" aria-hidden="true"></i>
+          <span>100+ Engineers</span>
+        </div>
+        <div class="visual-icon-float vif-3">
+          <i class="fas fa-award" aria-hidden="true"></i>
+          <span>ISO Certified</span>
+        </div>
+
+        <div class="auth-visual-content">
+          <div class="auth-brand">
+            <div class="brand-logo" style="width:56px;height:56px;font-size:1.8rem;" aria-hidden="true">S</div>
+            <div class="brand-info">
+              <span class="brand-name" style="font-size:1.6rem;">STACKLY</span>
+              <span class="brand-tagline">Building Excellence</span>
+            </div>
+          </div>
+
+          <h2 class="auth-visual-title">
+            Join the STACKLY<br><span class="text-gold">Excellence Network</span>
+          </h2>
+          <p class="auth-visual-subtitle">
+            Create your account and unlock access to world-class project management tools, real-time updates, and expert support.
+          </p>
+
+          <div class="auth-features">
+            <div class="auth-feature-item">
+              <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
+              <span>Instant project dashboard access</span>
+            </div>
+            <div class="auth-feature-item">
+              <i class="fas fa-bell" aria-hidden="true"></i>
+              <span>Real-time project notifications</span>
+            </div>
+            <div class="auth-feature-item">
+              <i class="fas fa-file-alt" aria-hidden="true"></i>
+              <span>Quotations, invoices &amp; reports</span>
+            </div>
+            <div class="auth-feature-item">
+              <i class="fas fa-headset" aria-hidden="true"></i>
+              <span>Dedicated 24/7 client support</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT — Signup Form -->
+      <div class="auth-form-side">
+        <div class="auth-form-container">
+          <div class="auth-form-header">
+            <p class="auth-welcome">Get Started — Free</p>
+            <h1 class="auth-title">Create Your Account</h1>
+            <p class="auth-subtitle">
+              Already have an account? <a href="login.html">Sign in here</a>
+            </p>
+          </div>
+
+          <!-- Alert banner -->
+          <div class="auth-alert" id="signupAlert" role="alert"></div>
+
+          <form class="auth-form" id="signupForm" novalidate>
+
+            <!-- ROLE — Visual card selector -->
+            <div class="form-group">
+              <label id="roleLabel">Account Type *</label>
+              <div class="role-cards" role="radiogroup" aria-labelledby="roleLabel">
+                <label class="role-card-option" id="adminCard" tabindex="0">
+                  <input type="radio" name="signupRoleRadio" value="admin" id="roleAdmin">
+                  <div class="role-check"><i class="fas fa-check" aria-hidden="true"></i></div>
+                  <i class="fas fa-user-shield" aria-hidden="true"></i>
+                  <span>Admin</span>
+                  <small>Manage projects &amp; teams</small>
+                </label>
+                <label class="role-card-option" id="clientCard" tabindex="0">
+                  <input type="radio" name="signupRoleRadio" value="client" id="roleClient">
+                  <div class="role-check"><i class="fas fa-check" aria-hidden="true"></i></div>
+                  <i class="fas fa-user-tie" aria-hidden="true"></i>
+                  <span>Client</span>
+                  <small>Track your project status</small>
+                </label>
+              </div>
+
+              <!-- Hidden select for validation compatibility -->
+              <select id="signupRole" name="role" required aria-required="true" style="display:none;">
+                <option value="">Select role</option>
+                <option value="admin">Admin</option>
+                <option value="client">Client</option>
+              </select>
+
+              <span class="field-error" id="signupRoleError" role="alert"></span>
+            </div>
+
+            <!-- Full Name -->
+            <div class="form-group">
+              <label for="signupName">Full Name *</label>
+              <div class="field-wrap">
+                <div class="field-icon-box">
+                  <i class="fas fa-user" aria-hidden="true"></i>
+                </div>
+                <input type="text" id="signupName" name="name"
+                       placeholder="John Doe" required
+                       autocomplete="name" aria-required="true">
+              </div>
+              <span class="field-error" id="signupNameError" role="alert"></span>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label for="signupEmail">Work / Personal Email *</label>
+              <div class="field-wrap">
+                <div class="field-icon-box">
+                  <i class="fas fa-envelope" aria-hidden="true"></i>
+                </div>
+                <input type="email" id="signupEmail" name="email"
+                       placeholder="you@company.com" required
+                       autocomplete="email" aria-required="true">
+              </div>
+              <span class="field-error" id="signupEmailError" role="alert"></span>
+            </div>
+
+            <!-- Phone (optional) -->
+            <div class="form-group">
+              <label for="signupPhone">Phone Number <span style="color:var(--gray-400);font-weight:400;">(optional)</span></label>
+              <div class="field-wrap">
+                <div class="field-icon-box">
+                  <i class="fas fa-phone-alt" aria-hidden="true"></i>
+                </div>
+                <input type="tel" id="signupPhone" name="phone"
+                       placeholder="+91 98765 43210"
+                       autocomplete="tel">
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+              <label for="signupPassword">Password *</label>
+              <div class="field-wrap">
+                <div class="field-icon-box">
+                  <i class="fas fa-lock" aria-hidden="true"></i>
+                </div>
+                <input type="password" id="signupPassword" name="password"
+                       placeholder="Create a strong password" required
+                       autocomplete="new-password" aria-required="true"
+                       minlength="8">
+                <button type="button" class="password-toggle" id="toggleSignupPwd" aria-label="Toggle password visibility">
+                  <i class="fas fa-eye" aria-hidden="true"></i>
+                </button>
+              </div>
+              <div class="strength-meter" aria-hidden="true">
+                <div class="strength-fill" style="width:0;"></div>
+              </div>
+              <div class="strength-label">
+                <span class="strength-text" aria-live="polite"></span>
+                <span class="strength-hint">Min 8 chars, 1 uppercase, 1 number</span>
+              </div>
+              <span class="field-error" id="signupPasswordError" role="alert"></span>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group">
+              <label for="signupConfirm">Confirm Password *</label>
+              <div class="field-wrap">
+                <div class="field-icon-box">
+                  <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                </div>
+                <input type="password" id="signupConfirm" name="confirm"
+                       placeholder="Repeat your password" required
+                       autocomplete="new-password" aria-required="true">
+                <button type="button" class="password-toggle" id="toggleConfirmPwd" aria-label="Toggle confirm password visibility">
+                  <i class="fas fa-eye" aria-hidden="true"></i>
+                </button>
+              </div>
+              <span class="field-error" id="signupConfirmError" role="alert"></span>
+            </div>
+
+            <!-- Terms -->
+            <div class="form-group">
+              <label class="checkbox-wrap" style="align-items:flex-start;">
+                <input type="checkbox" id="termsCheck" name="terms" style="margin-top:3px;">
+                <span>
+                  I agree to STACKLY's
+                  <a href="#" class="terms-link">Terms of Service</a> and
+                  <a href="#" class="terms-link">Privacy Policy</a>.
+                  I understand that my data will be processed securely.
+                </span>
+              </label>
+              <span class="field-error" id="termsError" role="alert"></span>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn btn-primary btn-full btn-ripple">
+              <i class="fas fa-user-plus" aria-hidden="true"></i> Create Account
+            </button>
+
+            <div class="auth-divider">or sign up with</div>
+
+            <div style="display:flex;gap:12px;">
+              <button type="button" class="btn btn-full" style="background:var(--off-white);color:var(--charcoal);border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:0.88rem;font-weight:600;gap:8px;padding:12px;">
+                <i class="fab fa-google" style="color:#EA4335;" aria-hidden="true"></i> Google
+              </button>
+              <button type="button" class="btn btn-full" style="background:var(--off-white);color:var(--charcoal);border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:0.88rem;font-weight:600;gap:8px;padding:12px;">
+                <i class="fab fa-microsoft" style="color:#00A4EF;" aria-hidden="true"></i> Microsoft
+              </button>
+            </div>
+
+          </form>
+
+          <div class="auth-footer" style="margin-top:20px;">
+            <p>Already have an account? <a href="login.html">Sign in</a></p>
+          </div>
+
+          <p style="text-align:center;margin-top:16px;font-size:0.72rem;color:var(--gray-400);font-family:var(--font-accent);">
+            Your information is protected by 256-bit encryption.
+            <i class="fas fa-lock" style="color:var(--gold);" aria-hidden="true"></i>
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    /* Role card visual selection syncs to hidden <select> */
+    document.querySelectorAll('.role-card-option').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.role-card-option').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        const radio = card.querySelector('input[type="radio"]');
+        if (radio) {
+          radio.checked = true;
+          const select = document.getElementById('signupRole');
+          if (select) select.value = radio.value;
+        }
+      });
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Login to your STACKLY account — Admin or Client portal access.">
+  <title>Login | STACKLY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Login-page tweaks */
+    body { background: var(--dark-bg); }
+
+    .auth-page { padding-top: 80px; min-height: 100vh; }
+
+    /* Animated construction lines on visual side */
+    .auth-visual::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 40px,
+        rgba(245,166,35,0.025) 40px,
+        rgba(245,166,35,0.025) 41px
+      );
+      animation: diagonalMove 20s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes diagonalMove {
+      0%   { transform: translate(0, 0); }
+      100% { transform: translate(82px, 82px); }
+    }
+
+    /* Strength meter */
+    .strength-meter {
+      margin-top: 6px;
+      height: 4px;
+      background: var(--gray-200);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .strength-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 4px;
+      transition: width 0.4s ease, background 0.4s ease;
+    }
+    .strength-text {
+      font-size: 0.72rem;
+      color: var(--gray-400);
+      font-family: var(--font-accent);
+      margin-top: 4px;
+    }
+
+    /* Active auth button highlight */
+    .btn-nav-login { color: var(--gold) !important; border-color: var(--gold) !important; background: rgba(245,166,35,0.08) !important; }
+
+    /* Floating icons on visual */
+    .visual-icon-float {
+      position: absolute;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      backdrop-filter: blur(8px);
+      animation: floatIcon 4s ease-in-out infinite alternate;
+    }
+    .visual-icon-float i { color: var(--gold); font-size: 1.1rem; }
+    .visual-icon-float span { font-size: 0.8rem; color: rgba(255,255,255,0.7); white-space: nowrap; }
+    .vif-1 { top: 15%; right: 8%; animation-delay: 0s; }
+    .vif-2 { bottom: 22%; left: 8%; animation-delay: 1.5s; }
+    .vif-3 { top: 55%; right: 5%; animation-delay: 0.8s; }
+    @keyframes floatIcon {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(-12px); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════ NAVBAR ═══════════════════ -->
+  <nav class="navbar scrolled" id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand" aria-label="STACKLY Home">
+        <div class="brand-logo" aria-hidden="true">S</div>
+        <div class="brand-info">
+          <span class="brand-name">STACKLY</span>
+          <span class="brand-tagline">Building Excellence</span>
+        </div>
+      </a>
+
+      <div class="nav-menu" id="navMenu">
+        <a href="index.html#home"     class="nav-link">Home</a>
+        <a href="index.html#about"    class="nav-link">About</a>
+        <a href="index.html#services" class="nav-link">Services</a>
+        <a href="index.html#projects" class="nav-link">Projects</a>
+        <a href="index.html#team"     class="nav-link">Team</a>
+        <a href="index.html#contact"  class="nav-link">Contact</a>
+      </div>
+
+      <div class="nav-auth">
+        <a href="login.html"  class="btn-nav-login"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="signup.html" class="btn-nav-signup"><i class="fas fa-user-plus"></i> Sign Up</a>
+      </div>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
+    <a href="index.html#home"     class="mobile-nav-link">Home</a>
+    <a href="index.html#about"    class="mobile-nav-link">About</a>
+    <a href="index.html#services" class="mobile-nav-link">Services</a>
+    <a href="index.html#projects" class="mobile-nav-link">Projects</a>
+    <a href="index.html#team"     class="mobile-nav-link">Team</a>
+    <a href="index.html#contact"  class="mobile-nav-link">Contact</a>
+    <div class="mobile-auth">
+      <a href="login.html"  class="btn-nav-login" style="display:flex;justify-content:center;"><i class="fas fa-sign-in-alt"></i> Login</a>
+      <a href="signup.html" class="btn-nav-signup" style="display:flex;justify-content:center;margin-top:8px;"><i class="fas fa-user-plus"></i> Sign Up</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════ AUTH PAGE ═══════════════════ -->
+  <main class="auth-page">
+    <div class="auth-split">
+
+      <!-- LEFT — Visual Brand Panel -->
+      <div class="auth-visual">
+        <div class="auth-visual-bg"></div>
+        <div class="auth-visual-glow"></div>
+
+        <!-- Floating context badges -->
+        <div class="visual-icon-float vif-1">
+          <i class="fas fa-shield-alt" aria-hidden="true"></i>
+          <span>Secure Login</span>
+        </div>
+        <div class="visual-icon-float vif-2">
+          <i class="fas fa-building" aria-hidden="true"></i>
+          <span>500+ Projects</span>
+        </div>
+        <div class="visual-icon-float vif-3">
+          <i class="fas fa-users" aria-hidden="true"></i>
+          <span>Admin &amp; Client Access</span>
+        </div>
+
+        <div class="auth-visual-content">
+          <div class="auth-brand">
+            <div class="brand-logo" style="width:56px;height:56px;font-size:1.8rem;" aria-hidden="true">S</div>
+            <div class="brand-info">
+              <span class="brand-name" style="font-size:1.6rem;">STACKLY</span>
+              <span class="brand-tagline">Building Excellence</span>
+            </div>
+          </div>
+
+          <h2 class="auth-visual-title">
+            Welcome Back to<br><span class="text-gold">STACKLY Portal</span>
+          </h2>
+          <p class="auth-visual-subtitle">
+            Access your project dashboard, track progress, manage teams, and collaborate with ease — all in one place.
+          </p>
+
+          <div class="auth-features">
+            <div class="auth-feature-item">
+              <i class="fas fa-chart-line" aria-hidden="true"></i>
+              <span>Real-time project tracking &amp; analytics</span>
+            </div>
+            <div class="auth-feature-item">
+              <i class="fas fa-file-contract" aria-hidden="true"></i>
+              <span>Document management &amp; contracts</span>
+            </div>
+            <div class="auth-feature-item">
+              <i class="fas fa-comments" aria-hidden="true"></i>
+              <span>Direct communication with teams</span>
+            </div>
+            <div class="auth-feature-item">
+              <i class="fas fa-lock" aria-hidden="true"></i>
+              <span>Enterprise-grade data security</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT — Login Form -->
+      <div class="auth-form-side">
+        <div class="auth-form-container">
+          <div class="auth-form-header">
+            <p class="auth-welcome">Welcome Back</p>
+            <h1 class="auth-title">Sign In to STACKLY</h1>
+            <p class="auth-subtitle">
+              Don't have an account? <a href="signup.html">Create one free</a>
+            </p>
+          </div>
+
+          <!-- Alert banner -->
+          <div class="auth-alert" id="loginAlert" role="alert"></div>
+
+          <form class="auth-form" id="loginForm" novalidate>
+
+            <!-- Role Selector -->
+            <div class="form-group">
+              <label for="loginRole">Access Type *</label>
+              <div class="field-wrap">
+                <div class="field-icon-box">
+                  <i class="fas fa-id-badge" aria-hidden="true"></i>
+                </div>
+                <select id="loginRole" name="role" required aria-required="true">
+                  <option value="">— Select your role —</option>
+                  <option value="admin">&#128272; Admin</option>
+                  <option value="client">&#128100; Client</option>
+                </select>
+              </div>
+              <span class="role-hint"><i class="fas fa-info-circle" aria-hidden="true"></i> Select Admin to manage projects, or Client to view your project status.</span>
+              <span class="field-error" id="loginRoleError" role="alert"></span>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label for="loginEmail">Email Address *</label>
+              <div class="field-wrap">
+                <div class="field-icon-box">
+                  <i class="fas fa-envelope" aria-hidden="true"></i>
+                </div>
+                <input type="email" id="loginEmail" name="email"
+                       placeholder="you@example.com" required
+                       autocomplete="email" aria-required="true">
+              </div>
+              <span class="field-error" id="loginEmailError" role="alert"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+              <label for="loginPassword">Password *</label>
+              <div class="field-wrap">
+                <div class="field-icon-box">
+                  <i class="fas fa-lock" aria-hidden="true"></i>
+                </div>
+                <input type="password" id="loginPassword" name="password"
+                       placeholder="Enter your password" required
+                       autocomplete="current-password" aria-required="true">
+                <button type="button" class="password-toggle" id="toggleLoginPwd" aria-label="Toggle password visibility">
+                  <i class="fas fa-eye" aria-hidden="true"></i>
+                </button>
+              </div>
+              <span class="field-error" id="loginPasswordError" role="alert"></span>
+            </div>
+
+            <!-- Options row -->
+            <div class="auth-form-options">
+              <label class="checkbox-wrap">
+                <input type="checkbox" id="rememberMe" name="remember">
+                <span>Remember me</span>
+              </label>
+              <a href="#" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn btn-primary btn-full btn-ripple">
+              <i class="fas fa-sign-in-alt" aria-hidden="true"></i> Sign In
+            </button>
+
+            <div class="auth-divider">or continue with</div>
+
+            <!-- Social / SSO placeholders -->
+            <div style="display:flex;gap:12px;">
+              <button type="button" class="btn btn-full" style="background:var(--off-white);color:var(--charcoal);border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:0.88rem;font-weight:600;gap:8px;padding:12px;">
+                <i class="fab fa-google" style="color:#EA4335;" aria-hidden="true"></i> Google
+              </button>
+              <button type="button" class="btn btn-full" style="background:var(--off-white);color:var(--charcoal);border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:0.88rem;font-weight:600;gap:8px;padding:12px;">
+                <i class="fab fa-microsoft" style="color:#00A4EF;" aria-hidden="true"></i> Microsoft
+              </button>
+            </div>
+
+          </form>
+
+          <div class="auth-footer" style="margin-top:24px;">
+            <p>New to STACKLY? <a href="signup.html">Create a free account</a></p>
+          </div>
+
+          <p style="text-align:center;margin-top:20px;font-size:0.72rem;color:var(--gray-400);font-family:var(--font-accent);">
+            By signing in you agree to our <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="terms-link">Privacy Policy</a>.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

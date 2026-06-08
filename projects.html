@@ -1,0 +1,448 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="STACKLY Projects â€” Landmark construction portfolio across residential, commercial, industrial, and interior design sectors.">
+  <title>Projects | STACKLY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Full portfolio grid â€” taller rows and more cards */
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: 280px;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    .portfolio-grid .project-card.tall { grid-row: span 2; }
+    .portfolio-grid .project-card.wide { grid-column: span 2; }
+
+    /* Stats bar */
+    .portfolio-stats {
+      display: flex;
+      gap: 0;
+      background: var(--white);
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 48px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    .portfolio-stat {
+      flex: 1;
+      padding: 32px 20px;
+      text-align: center;
+      border-right: 1.5px solid var(--gray-200);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .portfolio-stat::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 0.35s ease;
+    }
+    .portfolio-stat:last-child { border-right: none; }
+    .portfolio-stat:hover {
+      background: linear-gradient(160deg, rgba(245,166,35,0.08) 0%, rgba(245,166,35,0.04) 100%);
+      border-color: rgba(245,166,35,0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(245,166,35,0.15);
+    }
+    .portfolio-stat:hover::after { transform: scaleX(1); }
+    .portfolio-stat:hover .portfolio-stat-num {
+      color: var(--gold-dark);
+      transform: scale(1.08);
+      transition: color 0.3s ease, transform 0.3s ease;
+      display: inline-block;
+    }
+    .portfolio-stat:hover .portfolio-stat-label {
+      color: var(--charcoal);
+      transition: color 0.3s ease;
+    }
+    .portfolio-stat-num {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 6px;
+      transition: color 0.3s ease, transform 0.3s ease;
+      display: inline-block;
+    }
+    .portfolio-stat-label {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-family: var(--font-accent);
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    @media (max-width: 900px) {
+      .portfolio-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 240px; }
+      .portfolio-grid .project-card.tall { grid-row: span 1; }
+      .portfolio-grid .project-card.wide { grid-column: span 1; }
+      .portfolio-stats { flex-wrap: wrap; }
+      .portfolio-stat { flex: 1 1 50%; border-bottom: 1.5px solid var(--gray-200); }
+    }
+    @media (max-width: 560px) {
+      .portfolio-grid { grid-template-columns: 1fr; grid-auto-rows: 220px; }
+      .portfolio-stat { flex: 1 1 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- â•â•â•â•â•â•â•â•â•â•â• NAVBAR â•â•â•â•â•â•â•â•â•â•â• -->
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="brand-logo">S</div>
+        <div class="brand-info">
+          <span class="brand-name">STACKLY</span>
+          <span class="brand-tagline">Building Excellence</span>
+        </div>
+      </a>
+      <div class="nav-menu" id="navMenu">
+        <a href="index.html"    class="nav-link">Home</a>
+        <a href="about.html"    class="nav-link">About</a>
+        <a href="services.html" class="nav-link">Services</a>
+        <a href="projects.html" class="nav-link active">Projects</a>
+        <a href="contact.html"  class="nav-link">Contact</a>
+      </div>
+      <div class="nav-auth">
+        <a href="login.html"  class="btn-nav-login"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="signup.html" class="btn-nav-signup"><i class="fas fa-user-plus"></i> Sign Up</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </nav>
+
+  <nav class="mobile-menu" id="mobileMenu">
+    <a href="index.html"    class="mobile-nav-link">Home</a>
+    <a href="about.html"    class="mobile-nav-link">About</a>
+    <a href="services.html" class="mobile-nav-link">Services</a>
+    <a href="projects.html" class="mobile-nav-link">Projects</a>
+    <a href="contact.html"  class="mobile-nav-link">Contact</a>
+    <div class="mobile-auth">
+      <a href="login.html"  class="btn-nav-login" style="display:flex;justify-content:center;"><i class="fas fa-sign-in-alt"></i> Login</a>
+      <a href="signup.html" class="btn-nav-signup" style="display:flex;justify-content:center;margin-top:8px;"><i class="fas fa-user-plus"></i> Sign Up</a>
+    </div>
+  </nav>
+
+  <!-- â•â•â•â•â•â•â•â•â•â•â• PAGE BANNER â•â•â•â•â•â•â•â•â•â•â• -->
+  <section class="page-banner">
+    <div class="page-banner-grid"></div>
+    <div class="page-banner-geo page-banner-geo-1"></div>
+    <div class="page-banner-geo page-banner-geo-2"></div>
+    <div class="container">
+      <div class="page-banner-content">
+        <div class="page-banner-breadcrumb">
+          <a href="index.html">Home</a>
+          <span class="sep"><i class="fas fa-chevron-right"></i></span>
+          <span>Projects</span>
+        </div>
+        <h1 class="page-banner-title">
+          Our <span class="text-gold">Projects</span>
+        </h1>
+        <p class="page-banner-subtitle">
+          500+ landmark projects delivered across India â€” each one a testament to our precision, innovation, and commitment to excellence.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- â•â•â•â•â•â•â•â•â•â•â• FULL PORTFOLIO â•â•â•â•â•â•â•â•â•â•â• -->
+  <section class="projects-section" id="portfolio" style="background:var(--off-white);">
+    <div class="container">
+
+      <!-- Portfolio stats bar -->
+      <div class="portfolio-stats">
+        <div class="portfolio-stat">
+          <div class="portfolio-stat-num">500+</div>
+          <div class="portfolio-stat-label">Total Projects</div>
+        </div>
+        <div class="portfolio-stat">
+          <div class="portfolio-stat-num">50+</div>
+          <div class="portfolio-stat-label">Cities</div>
+        </div>
+        <div class="portfolio-stat">
+          <div class="portfolio-stat-num">â‚¹12,000 Cr</div>
+          <div class="portfolio-stat-label">Project Value</div>
+        </div>
+        <div class="portfolio-stat">
+          <div class="portfolio-stat-num">98%</div>
+          <div class="portfolio-stat-label">On-Time Delivery</div>
+        </div>
+        <div class="portfolio-stat">
+          <div class="portfolio-stat-num">4.9â˜…</div>
+          <div class="portfolio-stat-label">Client Rating</div>
+        </div>
+      </div>
+
+      <!-- Filter -->
+      <div class="project-filters" style="margin-bottom:40px;">
+        <button class="filter-btn active" data-filter="all">All Projects</button>
+        <button class="filter-btn" data-filter="residential">Residential</button>
+        <button class="filter-btn" data-filter="commercial">Commercial</button>
+        <button class="filter-btn" data-filter="industrial">Industrial</button>
+        <button class="filter-btn" data-filter="interior">Interior Design</button>
+        <button class="filter-btn" data-filter="infrastructure">Infrastructure</button>
+      </div>
+
+      <!-- Full Portfolio Grid -->
+      <div class="portfolio-grid" id="projectsGrid">
+
+        <div class="project-card tall" data-category="commercial">
+          <div class="project-visual commercial-1">
+            <div class="project-overlay">
+              <div class="project-info">
+                <span class="project-cat">Commercial</span>
+                <h3 class="project-name">Apex Tower</h3>
+                <p class="project-loc"><i class="fas fa-map-marker-alt"></i> Mumbai, Maharashtra</p>
+                <a href="#" class="project-btn">View Details</a>
+              </div>
+            </div>
+            <div class="project-badge">45 Floors</div>
+          </div>
+        </div>
+
+        <div class="project-card" data-category="residential">
+          <div class="project-visual residential-1">
+            <div class="project-overlay">
+              <div class="project-info">
+                <span class="project-cat">Residential</span>
+                <h3 class="project-name">Skyline Residences</h3>
+                <p class="project-loc"><i class="fas fa-map-marker-alt"></i> Bangalore, Karnataka</p>
+                <a href="#" class="project-btn">View Details</a>
+              </div>
+            </div>
+            <div class="project-badge">320 Units</div>
+          </div>
+        </div>
+
+        <div class="project-card" data-category="interior">
+          <div class="project-visual interior-1">
+            <div class="project-overlay">
+              <div class="project-info">
+                <span class="project-cat">Interior Design</span>
+                <h3 class="project-name">Executive HQ</h3>
+                <p class="project-loc"><i class="fas fa-map-marker-alt"></i> Delhi, NCR</p>
+                <a href="#" class="project-btn">View Details</a>
+              </div>
+            </div>
+            <div class="project-badge">50,000 sq.ft</div>
+          </div>
+        </div>
+
+        <div class="project-card wide" data-category="industrial">
+          <div class="project-visual industrial-1">
+            <div class="project-overlay">
+              <div class="project-info">
+                <span class="project-cat">Industrial</span>
+                <h3 class="project-name">MegaPlant Complex</h3>
+                <p class="project-loc"><i class="fas fa-map-marker-alt"></i> Pune, Maharashtra</p>
+                <a href="#" class="project-btn">View Details</a>
+              </div>
+            </div>
+            <div class="project-badge">2M sq.ft</div>
+          </div>
+        </div>
+
+        <div class="project-card" data-category="commercial">
+          <div class="project-visual commercial-2">
+            <div class="project-overlay">
+              <div class="project-info">
+                <span class="project-cat">Commercial</span>
+                <h3 class="project-name">The Grand Mall</h3>
+                <p class="project-loc"><i class="fas fa-map-marker-alt"></i> Chennai, Tamil Nadu</p>
+                <a href="#" class="project-btn">View Details</a>
+              </div>
+            </div>
+            <div class="project-badge">500+ Stores</div>
+          </div>
+        </div>
+
+        <div class="project-card tall" data-category="residential">
+          <div class="project-visual residential-2">
+            <div class="project-overlay">
+              <div class="project-info">
+                <span class="project-cat">Residential</span>
+                <h3 class="project-name">Villa Paradiso</h3>
+                <p class="project-loc"><i class="fas fa-map-marker-alt"></i> Hyderabad, Telangana</p>
+                <a href="#" class="project-btn">View Details</a>
+              </div>
+            </div>
+            <div class="project-badge">Luxury Villas</div>
+          </div>
+        </div>
+
+        <div class="project-card" data-category="infrastructure">
+          <div class="project-visual" style="background:linear-gradient(145deg,#1a3a1a 0%,#254a25 40%,#0d280d 100%);background-image:url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80&fm=webp');background-size:cover;background-position:center;">
+            <div class="project-overlay">
+              <div class="project-info">
+                <span class="project-cat">Infrastructure</span>
+                <h3 class="project-name">Metro Link Phase 3</h3>
+                <p class="project-loc"><i class="fas fa-map-marker-alt"></i> Ahmedabad, Gujarat</p>
+                <a href="#" class="project-btn">View Details</a>
+              </div>
+            </div>
+            <div class="project-badge">12 Km Corridor</div>
+          </div>
+        </div>
+
+        <div class="project-card" data-category="interior">
+          <div class="project-visual" style="background:linear-gradient(145deg,#3a1a3a 0%,#4a254a 40%,#280d28 100%);background-image:url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80&fm=webp');background-size:cover;background-position:center;">
+            <div class="project-overlay">
+              <div class="project-info">
+                <span class="project-cat">Interior Design</span>
+                <h3 class="project-name">Prestige Hotel Lobby</h3>
+                <p class="project-loc"><i class="fas fa-map-marker-alt"></i> Goa</p>
+                <a href="#" class="project-btn">View Details</a>
+              </div>
+            </div>
+            <div class="project-badge">5-Star</div>
+          </div>
+        </div>
+
+        <div class="project-card" data-category="commercial">
+          <div class="project-visual" style="background:linear-gradient(145deg,#1a1a4a 0%,#25254a 40%,#0d0d38 100%);background-image:url('https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=900&q=80&fm=webp');background-size:cover;background-position:center;">
+            <div class="project-overlay">
+              <div class="project-info">
+                <span class="project-cat">Commercial</span>
+                <h3 class="project-name">TechHub Campus</h3>
+                <p class="project-loc"><i class="fas fa-map-marker-alt"></i> Noida, UP</p>
+                <a href="#" class="project-btn">View Details</a>
+              </div>
+            </div>
+            <div class="project-badge">8 Blocks</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="text-align:center;margin-top:16px;">
+        <a href="contact.html" class="btn btn-primary btn-ripple"><i class="fas fa-plus-circle"></i> Start Your Project</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- â•â•â•â•â•â•â•â•â•â•â• CTA â•â•â•â•â•â•â•â•â•â•â• -->
+  <section class="cta-section">
+    <div class="cta-bg"><div class="cta-overlay"></div><div class="cta-pattern"></div></div>
+    <div class="container">
+      <div class="cta-content">
+        <div class="cta-label">Your Project Next</div>
+        <h2 class="cta-title">Ready to Add Your Project to <span class="text-gold">Our Portfolio?</span></h2>
+        <p class="cta-subtitle">Every great project starts with a conversation. Let's talk about yours.</p>
+        <div class="cta-buttons">
+          <a href="contact.html" class="btn btn-gold btn-ripple"><i class="fas fa-rocket"></i> Start Your Project</a>
+          <a href="services.html" class="btn btn-outline-white btn-ripple"><i class="fas fa-th-list"></i> Explore Services</a>
+        </div>
+        <div class="cta-trust">
+          <div class="trust-item"><i class="fas fa-check-circle"></i> Free Consultation</div>
+          <div class="trust-item"><i class="fas fa-check-circle"></i> No Hidden Costs</div>
+          <div class="trust-item"><i class="fas fa-check-circle"></i> 100% Satisfaction</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- â•â•â•â•â•â•â•â•â•â•â• FOOTER â•â•â•â•â•â•â•â•â•â•â• -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand-col">
+            <a href="index.html" class="footer-brand">
+              <div class="brand-logo">S</div>
+              <div class="brand-info"><span class="brand-name">STACKLY</span><span class="brand-tagline">Building Excellence</span></div>
+            </a>
+            <p class="footer-desc">Building Tomorrow's Landmarks Today. World-class construction and infrastructure solutions that stand the test of time.</p>
+            <div class="footer-social">
+              <a href="#" class="footer-social-link"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#" class="footer-social-link"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="footer-social-link"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="footer-social-link"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="footer-social-link"><i class="fab fa-youtube"></i></a>
+            </div>
+          </div>
+          <div class="footer-links-col">
+            <h4 class="footer-col-title">Company</h4>
+            <ul class="footer-links">
+              <li><a href="about.html">About STACKLY</a></li>
+              <li><a href="about.html#team">Leadership Team</a></li>
+              <li><a href="about.html#awards">Awards</a></li>
+              <li><a href="#">Careers</a></li>
+              <li><a href="#">Press &amp; Media</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h4 class="footer-col-title">Services</h4>
+            <ul class="footer-links">
+              <li><a href="services.html">Building Construction</a></li>
+              <li><a href="services.html">Commercial Projects</a></li>
+              <li><a href="services.html">Residential Development</a></li>
+              <li><a href="services.html">Interior Design</a></li>
+              <li><a href="services.html">Infrastructure</a></li>
+              <li><a href="services.html">Industrial Construction</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-col">
+            <h4 class="footer-col-title">Projects</h4>
+            <ul class="footer-links">
+              <li><a href="projects.html">Residential</a></li>
+              <li><a href="projects.html">Commercial</a></li>
+              <li><a href="projects.html">Industrial</a></li>
+              <li><a href="projects.html">Interior Design</a></li>
+              <li><a href="projects.html">Infrastructure</a></li>
+            </ul>
+          </div>
+          <div class="footer-contact-col">
+            <h4 class="footer-col-title">Contact Info</h4>
+            <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>STACKLY Tower, BKC, Mumbai 400051</span></div>
+            <div class="footer-contact-item"><i class="fas fa-phone-alt"></i><span>+91 22 4567 8900</span></div>
+            <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>info@stackly.in</span></div>
+            <div class="footer-newsletter">
+              <h5>Newsletter</h5>
+              <div class="newsletter-form">
+                <input type="email" placeholder="Your email address">
+                <button type="button"><i class="fas fa-paper-plane"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="footer-bottom-content">
+          <p class="copyright">&copy; 2026 <strong>STACKLY</strong>. All Rights Reserved.</p>
+          <div class="footer-bottom-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Sitemap</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></button>
+  <script src="script.js"></script>
+</body>
+</html>
