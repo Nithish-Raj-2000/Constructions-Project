@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Page not found — STACKLY Construction Portal.">
+  <title>404 — Page Not Found | STACKLY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background: var(--dark-bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Diagonal animated background ── */
+    .error-page {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px 40px;
+      overflow: hidden;
+    }
+    .error-page::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 60px,
+        rgba(245,166,35,0.025) 60px,
+        rgba(245,166,35,0.025) 61px
+      );
+      animation: diagMove 25s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes diagMove {
+      0%   { transform: translate(0, 0); }
+      100% { transform: translate(87px, 87px); }
+    }
+
+    /* ── Glow blobs ── */
+    .glow-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .glow-blob-1 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(245,166,35,0.10), transparent 70%);
+      top: -60px; left: -80px;
+    }
+    .glow-blob-2 {
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(245,166,35,0.07), transparent 70%);
+      bottom: -50px; right: -50px;
+    }
+
+    /* ── Content card ── */
+    .error-card {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    /* ── Giant 404 number ── */
+    .error-number {
+      font-family: var(--font-heading);
+      font-size: clamp(4rem, 14vw, 7.5rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -2px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 50%, rgba(245,166,35,0.4) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      display: inline-block;
+      filter: drop-shadow(0 0 40px rgba(245,166,35,0.35));
+      animation: pulse404 3s ease-in-out infinite;
+    }
+    @keyframes pulse404 {
+      0%, 100% { filter: drop-shadow(0 0 40px rgba(245,166,35,0.35)); }
+      50%       { filter: drop-shadow(0 0 70px rgba(245,166,35,0.6)); }
+    }
+
+    /* ── Crane SVG illustration ── */
+    .error-illustration {
+      margin: 0 auto 4px;
+      position: relative;
+      height: 52px;
+    }
+    .crane-wrap {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 4px;
+    }
+    .crane-block {
+      border-radius: 3px;
+      background: rgba(245,166,35,0.15);
+      border: 1px solid rgba(245,166,35,0.25);
+    }
+    .crane-block-lg { width: 10px; height: 36px; }
+    .crane-block-md { width: 8px;  height: 26px; }
+    .crane-block-sm { width: 7px;  height: 18px; }
+    .crane-block-xs { width: 6px;  height: 12px; }
+
+    .crane-icon {
+      font-size: 1.7rem;
+      color: var(--gold);
+      opacity: 0.8;
+      margin-right: 4px;
+      animation: sway 2.4s ease-in-out infinite alternate;
+      transform-origin: bottom center;
+    }
+    @keyframes sway {
+      0%   { transform: rotate(-4deg); }
+      100% { transform: rotate(4deg); }
+    }
+
+    /* ── Headings and text ── */
+    .error-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245,166,35,0.1);
+      border: 1px solid rgba(245,166,35,0.25);
+      border-radius: 50px;
+      padding: 4px 14px;
+      font-family: var(--font-accent);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .error-badge i { font-size: 0.65rem; }
+
+    .error-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .error-title span { color: var(--gold); }
+
+    .error-desc {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.7;
+      max-width: 380px;
+      margin: 0 auto 28px;
+    }
+
+    /* ── Action button ── */
+    .error-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-error-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color: var(--black);
+      font-family: var(--font-heading);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 11px 22px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      box-shadow: var(--shadow-gold);
+      transition: var(--transition);
+      text-decoration: none;
+    }
+    .btn-error-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(245,166,35,0.45);
+    }
+    /* ── Footer strip ── */
+    .error-footer {
+      text-align: center;
+      padding: 20px 24px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .error-footer p {
+      font-family: var(--font-accent);
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.25);
+    }
+    .error-footer a {
+      color: rgba(245,166,35,0.6);
+      transition: color 0.2s;
+    }
+    .error-footer a:hover { color: var(--gold); }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .error-page { padding: 80px 20px 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════ NAVBAR ═══════════════════ -->
+  <nav class="navbar scrolled" id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand" aria-label="STACKLY Home">
+        <img src="Stackly logo.png" alt="STACKLY" class="brand-img">
+        <span class="brand-tagline">Constructions</span>
+      </a>
+
+      <div class="nav-menu" id="navMenu">
+        <a href="index.html#home"     class="nav-link">Home</a>
+        <a href="index.html#about"    class="nav-link">About</a>
+        <a href="index.html#services" class="nav-link">Services</a>
+        <a href="index.html#projects" class="nav-link">Projects</a>
+        <a href="index.html#team"     class="nav-link">Team</a>
+        <a href="index.html#contact"  class="nav-link">Contact</a>
+      </div>
+
+      <div class="nav-auth">
+        <a href="login.html"  class="btn-nav-login"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="signup.html" class="btn-nav-signup"><i class="fas fa-user-plus"></i> Sign Up</a>
+      </div>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
+    <a href="index.html#home"     class="mobile-nav-link">Home</a>
+    <a href="index.html#about"    class="mobile-nav-link">About</a>
+    <a href="index.html#services" class="mobile-nav-link">Services</a>
+    <a href="index.html#projects" class="mobile-nav-link">Projects</a>
+    <a href="index.html#team"     class="mobile-nav-link">Team</a>
+    <a href="index.html#contact"  class="mobile-nav-link">Contact</a>
+    <div class="mobile-auth">
+      <a href="login.html"  class="btn-nav-login"  style="display:flex;justify-content:center;"><i class="fas fa-sign-in-alt"></i> Login</a>
+      <a href="signup.html" class="btn-nav-signup" style="display:flex;justify-content:center;margin-top:8px;"><i class="fas fa-user-plus"></i> Sign Up</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════ 404 SECTION ═══════════════════ -->
+  <main class="error-page" role="main">
+
+    <!-- Glow blobs -->
+    <div class="glow-blob glow-blob-1" aria-hidden="true"></div>
+    <div class="glow-blob glow-blob-2" aria-hidden="true"></div>
+
+    <div class="error-card">
+
+      <!-- Construction illustration -->
+      <div class="error-illustration" aria-hidden="true">
+        <div class="crane-wrap">
+          <i class="fas fa-hard-hat crane-icon"></i>
+          <div class="crane-block crane-block-xs"></div>
+          <div class="crane-block crane-block-sm"></div>
+          <div class="crane-block crane-block-md"></div>
+          <div class="crane-block crane-block-lg"></div>
+          <div class="crane-block crane-block-md"></div>
+          <div class="crane-block crane-block-sm"></div>
+        </div>
+      </div>
+
+      <!-- Giant 404 -->
+      <div class="error-number" aria-label="Error 404">404</div>
+
+      <!-- Badge -->
+      <div class="error-badge">
+        <i class="fas fa-triangle-exclamation"></i>
+        Page Under Construction
+      </div>
+
+      <!-- Heading -->
+      <h1 class="error-title">
+        Looks Like This Page<br>
+        <span>Wasn't Built Yet</span>
+      </h1>
+
+      <!-- Description -->
+      <p class="error-desc">
+        The page you're looking for may have been moved, renamed, or is still on the blueprint. Let's get you back on solid ground.
+      </p>
+
+      <!-- CTA Button -->
+      <div class="error-actions">
+        <button onclick="history.back()" class="btn-error-primary">
+          <i class="fas fa-arrow-left"></i> Go Back
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ═══════════════════ FOOTER STRIP ═══════════════════ -->
+  <footer class="error-footer">
+    <p>&copy; 2026 <a href="index.html">STACKLY</a>. All rights reserved. &nbsp;|&nbsp; <a href="contact.html">Report an issue</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

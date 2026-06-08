@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | STACKLY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #F5A623;
+      --gold-dark: #D4891A;
+      --dark: #0d0d0d;
+      --charcoal: #1A1A2E;
+      --sidebar-bg: #111118;
+      --sidebar-width: 240px;
+      --topbar-h: 64px;
+      --white: #ffffff;
+      --off-white: #F8F9FA;
+      --gray-100: #f1f3f5;
+      --gray-200: #e9ecef;
+      --gray-400: #adb5bd;
+      --gray-500: #6c757d;
+      --gray-700: #495057;
+      --green: #38a169;
+      --blue: #3182ce;
+      --orange: #dd6b20;
+      --red: #e53e3e;
+      --radius: 10px;
+      --radius-sm: 6px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.07);
+      --shadow-md: 0 4px 24px rgba(0,0,0,0.10);
+    }
+    html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--off-white); color: var(--charcoal); overflow-x: hidden; }
+
+    /* ── SIDEBAR ─────────────────────────── */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--sidebar-width);
+      height: 100vh;
+      background: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      transition: transform 0.3s ease;
+    }
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .brand-text { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1rem; color: var(--white); }
+    .brand-sub { font-size: 0.65rem; color: var(--gray-400); font-weight: 400; letter-spacing: 0.05em; }
+
+    .sidebar-nav { flex: 1; padding: 16px 0; overflow-y: auto; }
+    .nav-section-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      padding: 12px 20px 6px;
+    }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: background 0.2s, color 0.2s;
+      border-left: 3px solid transparent;
+      cursor: pointer;
+    }
+    .sidebar-link:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+    .sidebar-link.active {
+      background: rgba(245,166,35,0.10);
+      color: var(--gold);
+      border-left-color: var(--gold);
+    }
+    .sidebar-link i { width: 18px; text-align: center; font-size: 0.9rem; }
+    .sidebar-link .badge {
+      margin-left: auto;
+      background: var(--gold);
+      color: #000;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 20px;
+    }
+    .sidebar-footer {
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .my-account {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 18px 20px 14px;
+    }
+    .my-account-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+      margin-bottom: 12px;
+      width: 100%;
+    }
+    .my-account-avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900; font-size: 1.25rem;
+      color: #000;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 14px rgba(245,166,35,0.35);
+    }
+    .my-account-role {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: capitalize;
+      margin-bottom: 4px;
+    }
+    .my-account-email {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.4);
+      word-break: break-all;
+      line-height: 1.4;
+      padding: 0 4px;
+    }
+    .user-avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.7rem;
+      color: #000;
+      flex-shrink: 0;
+    }
+
+    /* ── MAIN LAYOUT ─────────────────────── */
+    .main-wrapper {
+      margin-left: var(--sidebar-width);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── TOPBAR ──────────────────────────── */
+    .topbar {
+      height: var(--topbar-h);
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 10px; }
+    .topbar-title-group { display: flex; flex-direction: column; }
+    .topbar-title { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--charcoal); }
+    .topbar-breadcrumb { font-size: 0.75rem; color: var(--gray-500); }
+    .topbar-breadcrumb span { color: var(--gold); font-weight: 600; }
+
+    .topbar-right { display: flex; align-items: center; gap: 16px; }
+    .topbar-icon-btn {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gray-500);
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s, color 0.2s;
+      text-decoration: none;
+    }
+    .topbar-icon-btn:hover { background: rgba(245,166,35,0.1); color: var(--gold); border-color: rgba(245,166,35,0.3); }
+    .notif-dot {
+      position: absolute;
+      top: 7px; right: 7px;
+      width: 7px; height: 7px;
+      background: var(--red);
+      border-radius: 50%;
+      border: 1.5px solid var(--white);
+    }
+    .topbar-profile {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 4px 10px 4px 4px;
+      border-radius: 20px;
+      border: 1px solid var(--gray-200);
+      background: var(--white);
+      transition: border-color 0.2s;
+    }
+    .topbar-profile:hover { border-color: var(--gold); }
+    .topbar-profile .user-avatar { width: 28px; height: 28px; font-size: 0.7rem; }
+    .topbar-profile-name { font-size: 0.82rem; font-weight: 600; color: var(--charcoal); }
+
+    /* ── PAGE CONTENT ────────────────────── */
+    .page-content { flex: 1; padding: 28px; }
+
+    /* ── WELCOME BANNER ──────────────────── */
+    .welcome-banner {
+      background: linear-gradient(135deg, var(--charcoal) 0%, #1a2040 60%, #0d0d1a 100%);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .welcome-banner::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(245,166,35,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .welcome-text h2 { font-family: 'Montserrat', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--white); margin-bottom: 4px; }
+    .welcome-text p { font-size: 0.85rem; color: rgba(255,255,255,0.55); }
+    .welcome-text strong { color: var(--gold); }
+    .welcome-badge {
+      background: rgba(245,166,35,0.15);
+      border: 1px solid rgba(245,166,35,0.3);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ── STATS GRID ──────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .stat-header { display: flex; align-items: center; justify-content: space-between; }
+    .stat-label { font-size: 0.78rem; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.06em; }
+    .stat-icon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem;
+    }
+    .stat-icon.gold { background: rgba(245,166,35,0.12); color: var(--gold); }
+    .stat-icon.green { background: rgba(56,161,105,0.12); color: var(--green); }
+    .stat-icon.blue { background: rgba(49,130,206,0.12); color: var(--blue); }
+    .stat-icon.orange { background: rgba(221,107,32,0.12); color: var(--orange); }
+    .stat-value { font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 900; color: var(--charcoal); line-height: 1; }
+    .stat-change { display: flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 600; }
+    .stat-change.up { color: var(--green); }
+    .stat-change.down { color: var(--red); }
+    .stat-change span { color: var(--gray-500); font-weight: 400; }
+
+    /* ── TWO-COL GRID ────────────────────── */
+    .two-col { display: grid; grid-template-columns: 1fr 380px; gap: 20px; margin-bottom: 24px; }
+    .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
+
+    /* ── CARD ────────────────────────────── */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-title { font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--charcoal); display: flex; align-items: center; gap: 8px; }
+    .card-title i { color: var(--gold); font-size: 0.85rem; }
+    .card-action { font-size: 0.78rem; color: var(--gold); font-weight: 600; text-decoration: none; cursor: pointer; }
+    .card-action:hover { text-decoration: underline; }
+    .card-body { padding: 20px; }
+
+    /* ── PROJECTS TABLE ──────────────────── */
+    .projects-table { width: 100%; border-collapse: collapse; }
+    .projects-table th {
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--gray-500);
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--gray-200);
+      background: var(--gray-100);
+    }
+    .projects-table td {
+      padding: 13px 16px;
+      font-size: 0.85rem;
+      color: var(--charcoal);
+      border-bottom: 1px solid var(--gray-200);
+      vertical-align: middle;
+    }
+    .projects-table tr:last-child td { border-bottom: none; }
+    .projects-table tr:hover td { background: rgba(245,166,35,0.03); }
+    .project-name-cell { font-weight: 600; color: var(--charcoal); }
+    .project-name-cell small { display: block; font-size: 0.72rem; color: var(--gray-500); font-weight: 400; margin-top: 1px; }
+
+    /* ── STATUS BADGE ────────────────────── */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+    .status-badge.active { background: rgba(56,161,105,0.1); color: var(--green); }
+    .status-badge.active::before { background: var(--green); }
+    .status-badge.planning { background: rgba(49,130,206,0.1); color: var(--blue); }
+    .status-badge.planning::before { background: var(--blue); }
+    .status-badge.on-hold { background: rgba(221,107,32,0.1); color: var(--orange); }
+    .status-badge.on-hold::before { background: var(--orange); }
+    .status-badge.completed { background: rgba(245,166,35,0.1); color: var(--gold-dark); }
+    .status-badge.completed::before { background: var(--gold); }
+
+    /* ── PROGRESS BAR ────────────────────── */
+    .progress-wrap { display: flex; align-items: center; gap: 8px; }
+    .progress-bar-track {
+      flex: 1;
+      height: 6px;
+      background: var(--gray-200);
+      border-radius: 3px;
+      overflow: hidden;
+      min-width: 80px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+    }
+    .progress-pct { font-size: 0.75rem; font-weight: 700; color: var(--charcoal); width: 32px; text-align: right; }
+
+    /* ── ACTIVITY FEED ───────────────────── */
+    .activity-list { display: flex; flex-direction: column; gap: 0; }
+    .activity-item {
+      display: flex;
+      gap: 12px;
+      padding: 13px 20px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .activity-dot.gold { background: rgba(245,166,35,0.12); color: var(--gold); }
+    .activity-dot.green { background: rgba(56,161,105,0.12); color: var(--green); }
+    .activity-dot.blue { background: rgba(49,130,206,0.12); color: var(--blue); }
+    .activity-dot.red { background: rgba(229,62,62,0.12); color: var(--red); }
+    .activity-content { flex: 1; min-width: 0; }
+    .activity-text { font-size: 0.83rem; color: var(--charcoal); line-height: 1.45; }
+    .activity-text strong { color: var(--charcoal); font-weight: 600; }
+    .activity-time { font-size: 0.72rem; color: var(--gray-400); margin-top: 2px; }
+
+    /* ── QUICK ACTIONS ───────────────────── */
+    .quick-actions { display: flex; flex-direction: column; gap: 8px; padding: 12px 20px 16px; }
+    .quick-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      border-radius: var(--radius-sm);
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      color: var(--charcoal);
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .quick-btn:hover { background: rgba(245,166,35,0.08); border-color: rgba(245,166,35,0.35); color: var(--gold-dark); }
+    .quick-btn i { width: 16px; text-align: center; color: var(--gold); font-size: 0.85rem; }
+
+    /* ── TEAM MINI CARDS ─────────────────── */
+    .team-mini { display: flex; flex-direction: column; gap: 0; }
+    .team-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 20px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .team-row:last-child { border-bottom: none; }
+    .team-avatar-sm {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--charcoal), #2d3748);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+    .team-avatar-sm.gold { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: #000; }
+    .team-info { flex: 1; min-width: 0; }
+    .team-member-name { font-size: 0.83rem; font-weight: 600; color: var(--charcoal); }
+    .team-member-role { font-size: 0.72rem; color: var(--gray-500); }
+    .team-status {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+    .team-status.online { background: rgba(56,161,105,0.1); color: var(--green); }
+    .team-status.away { background: rgba(221,107,32,0.1); color: var(--orange); }
+    .team-status.offline { background: var(--gray-100); color: var(--gray-400); }
+
+    /* ── CHART PLACEHOLDER ───────────────── */
+    .chart-placeholder {
+      height: 160px;
+      background: linear-gradient(135deg, var(--gray-100) 0%, var(--white) 100%);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+      padding: 16px 12px 0;
+      gap: 6px;
+    }
+    .chart-bar {
+      flex: 1;
+      border-radius: 4px 4px 0 0;
+      background: linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
+      opacity: 0.7;
+      transition: opacity 0.2s;
+      position: relative;
+    }
+    .chart-bar:hover { opacity: 1; }
+    .chart-bar.muted { background: var(--gray-200); opacity: 1; }
+    .chart-labels { display: flex; justify-content: space-around; padding: 6px 12px 0; }
+    .chart-label { font-size: 0.65rem; color: var(--gray-400); text-align: center; flex: 1; }
+
+    /* ── LOGOUT BTN ──────────────────────── */
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(229,62,62,0.08);
+      border: 1px solid rgba(229,62,62,0.2);
+      color: var(--red);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .logout-btn:hover { background: rgba(229,62,62,0.15); }
+    .logout-btn i { font-size: 0.82rem; }
+
+    /* ── SIDEBAR OVERLAY ─────────────────── */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 99;
+    }
+    .sidebar-overlay.active { display: block; }
+
+    /* ── MENU TOGGLE (mobile only) ────────── */
+    .menu-toggle-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 34px; height: 34px;
+      border-radius: var(--radius-sm);
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      color: var(--gray-700);
+      cursor: pointer;
+      flex-shrink: 0;
+      font-size: 0.88rem;
+      transition: background 0.2s, color 0.2s;
+    }
+    .menu-toggle-btn:hover { background: rgba(245,166,35,0.1); color: var(--gold); border-color: rgba(245,166,35,0.3); }
+
+    /* ── TABLE SCROLL WRAPPER ─────────────── */
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .table-scroll table { min-width: 580px; }
+
+    /* ── RESPONSIVE ──────────────────────── */
+    @media (max-width: 1100px) {
+      .two-col { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 260px;
+        transform: translateX(-100%);
+        transition: transform 0.28s ease;
+        z-index: 200;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .main-wrapper { margin-left: 0 !important; }
+      .topbar { padding: 0 14px; }
+      .topbar-left { gap: 8px; }
+      .topbar-right { gap: 8px; }
+      .topbar-profile-name { display: none; }
+      .topbar-breadcrumb { display: none; }
+      .topbar-title { font-size: 0.92rem; }
+      .topbar-icon-btn { width: 32px; height: 32px; }
+      .topbar-profile { padding: 3px 8px 3px 3px; }
+      .menu-toggle-btn { display: flex; }
+      .page-content { padding: 14px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .two-col { grid-template-columns: 1fr; }
+      .three-col { grid-template-columns: 1fr; }
+      .welcome-banner { flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px 18px; }
+      .welcome-badge { font-size: 0.7rem; padding: 5px 12px; align-self: flex-start; }
+      .stat-card { padding: 16px; }
+      .stat-value { font-size: 1.5rem; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { gap: 10px; }
+      .stat-value { font-size: 1.25rem; }
+      .stat-label { font-size: 0.7rem; }
+      .page-content { padding: 10px; }
+      .welcome-text h2 { font-size: 1.05rem; }
+      .topbar-icon-btn.hide-xs { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="Stackly logo.png" alt="STACKLY" class="brand-img" style="height:32px;width:auto;">
+      <div class="brand-sub">Admin Portal</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a class="sidebar-link active" href="admin-dashboard.html">
+        <i class="fas fa-th-large"></i> Dashboard
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="fas fa-project-diagram"></i> Projects
+        <span class="badge">8</span>
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="fas fa-users"></i> Clients
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="fas fa-hard-hat"></i> Team
+      </a>
+
+      <div class="nav-section-label">Finance</div>
+      <a class="sidebar-link" href="#">
+        <i class="fas fa-file-invoice-dollar"></i> Invoices
+        <span class="badge">3</span>
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="fas fa-chart-bar"></i> Reports
+      </a>
+
+      <div class="nav-section-label">System</div>
+      <a class="sidebar-link" href="#">
+        <i class="fas fa-bell"></i> Notifications
+        <span class="badge">5</span>
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="fas fa-cog"></i> Settings
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="my-account">
+        <div class="my-account-label">My Account</div>
+        <div class="my-account-avatar" id="sidebarAvatar">A</div>
+        <div class="my-account-role" id="sidebarRole">Admin</div>
+        <div class="my-account-email" id="sidebarEmail">admin@stackly.com</div>
+      </div>
+      <div style="padding:0 16px 16px;">
+        <a href="login.html" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ═══════════════════ MAIN ═══════════════════ -->
+  <div class="main-wrapper">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Toggle sidebar">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="topbar-title-group">
+          <div class="topbar-title">Admin Dashboard</div>
+          <div class="topbar-breadcrumb">Home / <span>Dashboard</span></div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <a href="#" class="topbar-icon-btn hide-xs" title="Search">
+          <i class="fas fa-search"></i>
+        </a>
+        <a href="#" class="topbar-icon-btn" title="Notifications">
+          <i class="fas fa-bell"></i>
+          <span class="notif-dot"></span>
+        </a>
+        <a href="#" class="topbar-icon-btn hide-xs" title="Messages">
+          <i class="fas fa-envelope"></i>
+        </a>
+        <div class="topbar-profile">
+          <div class="user-avatar" id="topbarAvatar">A</div>
+          <span class="topbar-profile-name" id="topbarName">admin@stackly.com</span>
+          <i class="fas fa-chevron-down" style="font-size:0.65rem;color:#adb5bd;margin-left:2px;"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <main class="page-content">
+
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <div class="welcome-text">
+          <h2>Good Morning, <strong>Arjun</strong> 👋</h2>
+          <p>Here's what's happening across your projects today — Sunday, 8 June 2026</p>
+        </div>
+        <div class="welcome-badge">
+          <i class="fas fa-shield-alt"></i> Admin Access
+        </div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-label">Total Projects</div>
+            <div class="stat-icon gold"><i class="fas fa-project-diagram"></i></div>
+          </div>
+          <div class="stat-value">24</div>
+          <div class="stat-change up"><i class="fas fa-arrow-up"></i> +3 <span>this month</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-label">Active Projects</div>
+            <div class="stat-icon green"><i class="fas fa-hard-hat"></i></div>
+          </div>
+          <div class="stat-value">8</div>
+          <div class="stat-change up"><i class="fas fa-arrow-up"></i> +1 <span>this week</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-label">Total Revenue</div>
+            <div class="stat-icon blue"><i class="fas fa-rupee-sign"></i></div>
+          </div>
+          <div class="stat-value">₹4.2Cr</div>
+          <div class="stat-change up"><i class="fas fa-arrow-up"></i> +12% <span>vs last year</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-label">Team Members</div>
+            <div class="stat-icon orange"><i class="fas fa-users"></i></div>
+          </div>
+          <div class="stat-value">47</div>
+          <div class="stat-change down"><i class="fas fa-minus"></i> 0 <span>change</span></div>
+        </div>
+      </div>
+
+      <!-- Projects Table + Quick Actions -->
+      <div class="two-col">
+
+        <!-- Projects Table -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-project-diagram"></i> Active Projects</div>
+            <a href="#" class="card-action">View All →</a>
+          </div>
+          <div class="table-scroll">
+          <table class="projects-table">
+            <thead>
+              <tr>
+                <th>Project</th>
+                <th>Client</th>
+                <th>Status</th>
+                <th>Progress</th>
+                <th>Deadline</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="project-name-cell">
+                    Metro Link Tower
+                    <small>Commercial · Chennai</small>
+                  </div>
+                </td>
+                <td>Metro Infra Ltd.</td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="progress-wrap">
+                    <div class="progress-bar-track"><div class="progress-bar-fill" style="width:72%"></div></div>
+                    <div class="progress-pct">72%</div>
+                  </div>
+                </td>
+                <td style="color:var(--gray-500);font-size:0.8rem;">Sep 2026</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="project-name-cell">
+                    Prestige Grand Hotel
+                    <small>Hospitality · Bangalore</small>
+                  </div>
+                </td>
+                <td>Prestige Group</td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="progress-wrap">
+                    <div class="progress-bar-track"><div class="progress-bar-fill" style="width:45%"></div></div>
+                    <div class="progress-pct">45%</div>
+                  </div>
+                </td>
+                <td style="color:var(--gray-500);font-size:0.8rem;">Mar 2027</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="project-name-cell">
+                    TechHub Campus
+                    <small>Corporate · Hyderabad</small>
+                  </div>
+                </td>
+                <td>TechHub Pvt. Ltd.</td>
+                <td><span class="status-badge planning">Planning</span></td>
+                <td>
+                  <div class="progress-wrap">
+                    <div class="progress-bar-track"><div class="progress-bar-fill" style="width:18%"></div></div>
+                    <div class="progress-pct">18%</div>
+                  </div>
+                </td>
+                <td style="color:var(--gray-500);font-size:0.8rem;">Dec 2027</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="project-name-cell">
+                    Sunrise Residency
+                    <small>Residential · Mumbai</small>
+                  </div>
+                </td>
+                <td>K. Sharma Family</td>
+                <td><span class="status-badge on-hold">On Hold</span></td>
+                <td>
+                  <div class="progress-wrap">
+                    <div class="progress-bar-track"><div class="progress-bar-fill" style="width:33%"></div></div>
+                    <div class="progress-pct">33%</div>
+                  </div>
+                </td>
+                <td style="color:var(--orange);font-size:0.8rem;">TBD</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="project-name-cell">
+                    GreenPark Villas
+                    <small>Luxury Residential · Pune</small>
+                  </div>
+                </td>
+                <td>GreenPark Developers</td>
+                <td><span class="status-badge completed">Completed</span></td>
+                <td>
+                  <div class="progress-wrap">
+                    <div class="progress-bar-track"><div class="progress-bar-fill" style="width:100%"></div></div>
+                    <div class="progress-pct">100%</div>
+                  </div>
+                </td>
+                <td style="color:var(--green);font-size:0.8rem;">Done ✓</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+          <!-- Quick Actions -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="fas fa-bolt"></i> Quick Actions</div>
+            </div>
+            <div class="quick-actions">
+              <a href="#" class="quick-btn"><i class="fas fa-plus-circle"></i> New Project</a>
+              <a href="#" class="quick-btn"><i class="fas fa-user-plus"></i> Add Client</a>
+              <a href="#" class="quick-btn"><i class="fas fa-file-invoice"></i> Generate Invoice</a>
+              <a href="#" class="quick-btn"><i class="fas fa-upload"></i> Upload Document</a>
+              <a href="#" class="quick-btn"><i class="fas fa-calendar-plus"></i> Schedule Meeting</a>
+            </div>
+          </div>
+
+          <!-- Team Online -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="fas fa-users"></i> Team Status</div>
+              <a href="#" class="card-action">Manage →</a>
+            </div>
+            <div class="team-mini">
+              <div class="team-row">
+                <div class="team-avatar-sm gold">NK</div>
+                <div class="team-info">
+                  <div class="team-member-name">Nisha Kumar</div>
+                  <div class="team-member-role">Project Manager</div>
+                </div>
+                <span class="team-status online">Online</span>
+              </div>
+              <div class="team-row">
+                <div class="team-avatar-sm">AP</div>
+                <div class="team-info">
+                  <div class="team-member-name">Arun Patel</div>
+                  <div class="team-member-role">Lead Architect</div>
+                </div>
+                <span class="team-status online">Online</span>
+              </div>
+              <div class="team-row">
+                <div class="team-avatar-sm">MS</div>
+                <div class="team-info">
+                  <div class="team-member-name">Meena Sinha</div>
+                  <div class="team-member-role">Civil Engineer</div>
+                </div>
+                <span class="team-status away">Away</span>
+              </div>
+              <div class="team-row">
+                <div class="team-avatar-sm">VR</div>
+                <div class="team-info">
+                  <div class="team-member-name">Vikram Rao</div>
+                  <div class="team-member-role">Site Supervisor</div>
+                </div>
+                <span class="team-status offline">Offline</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Revenue Chart + Activity -->
+      <div class="two-col">
+
+        <!-- Revenue Chart -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-chart-bar"></i> Monthly Revenue (2026)</div>
+            <a href="#" class="card-action">Full Report →</a>
+          </div>
+          <div class="card-body">
+            <div class="chart-placeholder">
+              <div class="chart-bar" style="height:55%"></div>
+              <div class="chart-bar" style="height:70%"></div>
+              <div class="chart-bar" style="height:48%"></div>
+              <div class="chart-bar" style="height:82%"></div>
+              <div class="chart-bar" style="height:65%"></div>
+              <div class="chart-bar" style="height:90%"></div>
+              <div class="chart-bar muted" style="height:30%"></div>
+              <div class="chart-bar muted" style="height:30%"></div>
+              <div class="chart-bar muted" style="height:30%"></div>
+              <div class="chart-bar muted" style="height:30%"></div>
+              <div class="chart-bar muted" style="height:30%"></div>
+              <div class="chart-bar muted" style="height:30%"></div>
+            </div>
+            <div class="chart-labels">
+              <div class="chart-label">Jan</div>
+              <div class="chart-label">Feb</div>
+              <div class="chart-label">Mar</div>
+              <div class="chart-label">Apr</div>
+              <div class="chart-label">May</div>
+              <div class="chart-label">Jun</div>
+              <div class="chart-label">Jul</div>
+              <div class="chart-label">Aug</div>
+              <div class="chart-label">Sep</div>
+              <div class="chart-label">Oct</div>
+              <div class="chart-label">Nov</div>
+              <div class="chart-label">Dec</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity Feed -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-stream"></i> Recent Activity</div>
+            <a href="#" class="card-action">See All →</a>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-dot green"><i class="fas fa-check"></i></div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>GreenPark Villas</strong> marked as completed</div>
+                <div class="activity-time">2 hours ago · Nisha Kumar</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot gold"><i class="fas fa-file-invoice"></i></div>
+              <div class="activity-content">
+                <div class="activity-text">Invoice #INV-2026-048 sent to <strong>Prestige Group</strong></div>
+                <div class="activity-time">5 hours ago · Finance Dept.</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot blue"><i class="fas fa-user-plus"></i></div>
+              <div class="activity-content">
+                <div class="activity-text">New client <strong>TechHub Pvt. Ltd.</strong> onboarded</div>
+                <div class="activity-time">Yesterday · Arjun Reddy</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot gold"><i class="fas fa-upload"></i></div>
+              <div class="activity-content">
+                <div class="activity-text">Site plan v3 uploaded for <strong>Metro Link Tower</strong></div>
+                <div class="activity-time">Yesterday · Arun Patel</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot red"><i class="fas fa-exclamation"></i></div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>Sunrise Residency</strong> put on hold — permit delay</div>
+                <div class="activity-time">2 days ago · System</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    (function() {
+      /* ── Session data ── */
+      const role      = sessionStorage.getItem('stackly_role')  || 'admin';
+      const email     = sessionStorage.getItem('stackly_email') || 'admin@stackly.com';
+      const initial   = role.charAt(0).toUpperCase();
+      const roleLabel = role.charAt(0).toUpperCase() + role.slice(1);
+
+      document.getElementById('sidebarAvatar').textContent = initial;
+      document.getElementById('sidebarRole').textContent   = roleLabel;
+      document.getElementById('sidebarEmail').textContent  = email;
+      document.getElementById('topbarAvatar').textContent  = initial;
+      document.getElementById('topbarName').textContent    = email;
+
+      /* ── Mobile sidebar toggle ── */
+      const toggleBtn = document.getElementById('menuToggleBtn');
+      const sidebar   = document.querySelector('.sidebar');
+      const overlay   = document.getElementById('sidebarOverlay');
+
+      function openSidebar() {
+        sidebar.classList.add('open');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeSidebar() {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      toggleBtn?.addEventListener('click', () => {
+        sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+      });
+      overlay?.addEventListener('click', closeSidebar);
+
+      /* Close sidebar when a nav link is clicked on mobile */
+      document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth <= 768) closeSidebar();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

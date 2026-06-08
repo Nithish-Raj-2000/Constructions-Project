@@ -168,11 +168,8 @@
   <nav class="navbar scrolled" id="navbar" role="navigation" aria-label="Main navigation">
     <div class="nav-container">
       <a href="index.html" class="nav-brand" aria-label="STACKLY Home">
-        <div class="brand-logo" aria-hidden="true">S</div>
-        <div class="brand-info">
-          <span class="brand-name">STACKLY</span>
-          <span class="brand-tagline">Building Excellence</span>
-        </div>
+        <img src="Stackly logo.png" alt="STACKLY" class="brand-img">
+        <span class="brand-tagline">Constructions</span>
       </a>
 
       <div class="nav-menu" id="navMenu">
@@ -233,11 +230,7 @@
 
         <div class="auth-visual-content">
           <div class="auth-brand">
-            <div class="brand-logo" style="width:56px;height:56px;font-size:1.8rem;" aria-hidden="true">S</div>
-            <div class="brand-info">
-              <span class="brand-name" style="font-size:1.6rem;">STACKLY</span>
-              <span class="brand-tagline">Building Excellence</span>
-            </div>
+            <img src="Stackly logo.png" alt="STACKLY" class="brand-img" style="height:58px;">
           </div>
 
           <h2 class="auth-visual-title">
@@ -271,6 +264,10 @@
       <!-- RIGHT — Signup Form -->
       <div class="auth-form-side">
         <div class="auth-form-container">
+          <a href="index.html" class="auth-back-btn">
+            <i class="fas fa-arrow-left"></i> Go Back
+          </a>
+
           <div class="auth-form-header">
             <p class="auth-welcome">Get Started — Free</p>
             <h1 class="auth-title">Create Your Account</h1>
@@ -342,17 +339,18 @@
               <span class="field-error" id="signupEmailError" role="alert"></span>
             </div>
 
-            <!-- Phone (optional) -->
+            <!-- Phone -->
             <div class="form-group">
-              <label for="signupPhone">Phone Number <span style="color:var(--gray-400);font-weight:400;">(optional)</span></label>
+              <label for="signupPhone">Phone Number *</label>
               <div class="field-wrap">
                 <div class="field-icon-box">
                   <i class="fas fa-phone-alt" aria-hidden="true"></i>
                 </div>
                 <input type="tel" id="signupPhone" name="phone"
-                       placeholder="+91 98765 43210"
-                       autocomplete="tel">
+                       placeholder="9876543210" required
+                       autocomplete="tel" aria-required="true">
               </div>
+              <span class="field-error" id="signupPhoneError" role="alert"></span>
             </div>
 
             <!-- Password -->
@@ -375,7 +373,13 @@
               </div>
               <div class="strength-label">
                 <span class="strength-text" aria-live="polite"></span>
-                <span class="strength-hint">Min 8 chars, 1 uppercase, 1 number</span>
+              </div>
+              <div class="pwd-requirements" id="pwdRequirements" aria-live="polite">
+                <div class="req-item" id="req-length"><i class="fas fa-circle"></i> 8+ Characters</div>
+                <div class="req-item" id="req-upper"><i class="fas fa-circle"></i> 1 Uppercase Letter</div>
+                <div class="req-item" id="req-lower"><i class="fas fa-circle"></i> 1 Lowercase Letter</div>
+                <div class="req-item" id="req-number"><i class="fas fa-circle"></i> 1 Number</div>
+                <div class="req-item" id="req-special"><i class="fas fa-circle"></i> 1 Special Character (@$!%*?&amp;)</div>
               </div>
               <span class="field-error" id="signupPasswordError" role="alert"></span>
             </div>
@@ -445,7 +449,8 @@
 
   <script src="script.js"></script>
   <script>
-    /* Role card visual selection syncs to hidden <select> */
+  (function () {
+    /* ── Role card sync to hidden select ── */
     document.querySelectorAll('.role-card-option').forEach(card => {
       card.addEventListener('click', () => {
         document.querySelectorAll('.role-card-option').forEach(c => c.classList.remove('selected'));
@@ -453,14 +458,26 @@
         const radio = card.querySelector('input[type="radio"]');
         if (radio) {
           radio.checked = true;
-          const select = document.getElementById('signupRole');
-          if (select) select.value = radio.value;
+          const sel = document.getElementById('signupRole');
+          if (sel) sel.value = radio.value;
+          document.getElementById('signupRoleError').textContent = '';
         }
       });
       card.addEventListener('keydown', e => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
       });
     });
+
+    /* ── Google / Microsoft → 404 (exclude password toggle) ── */
+    document.querySelectorAll('.auth-form button[type="button"]:not(.password-toggle)').forEach(btn => {
+      btn.addEventListener('click', () => { window.location.href = '404.html'; });
+    });
+
+    /* ── Terms / Privacy links → 404 ── */
+    document.querySelectorAll('.terms-link').forEach(link => {
+      link.addEventListener('click', e => { e.preventDefault(); window.location.href = '404.html'; });
+    });
+  })();
   </script>
 </body>
 </html>

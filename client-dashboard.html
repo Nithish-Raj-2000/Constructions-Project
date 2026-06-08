@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Dashboard | STACKLY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #F5A623;
+      --gold-dark: #D4891A;
+      --dark: #0d0d0d;
+      --charcoal: #1A1A2E;
+      --sidebar-bg: #111118;
+      --sidebar-width: 240px;
+      --topbar-h: 64px;
+      --white: #ffffff;
+      --off-white: #F8F9FA;
+      --gray-100: #f1f3f5;
+      --gray-200: #e9ecef;
+      --gray-400: #adb5bd;
+      --gray-500: #6c757d;
+      --gray-700: #495057;
+      --green: #38a169;
+      --blue: #3182ce;
+      --orange: #dd6b20;
+      --red: #e53e3e;
+      --radius: 10px;
+      --radius-sm: 6px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.07);
+      --shadow-md: 0 4px 24px rgba(0,0,0,0.10);
+    }
+    html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--off-white); color: var(--charcoal); overflow-x: hidden; }
+
+    /* ── SIDEBAR ─────────────────────────── */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--sidebar-width);
+      height: 100vh;
+      background: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .brand-text { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1rem; color: var(--white); }
+    .brand-sub { font-size: 0.65rem; color: var(--gold); font-weight: 500; letter-spacing: 0.05em; }
+
+    .sidebar-nav { flex: 1; padding: 16px 0; overflow-y: auto; }
+    .nav-section-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      padding: 12px 20px 6px;
+    }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: background 0.2s, color 0.2s;
+      border-left: 3px solid transparent;
+      cursor: pointer;
+    }
+    .sidebar-link:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+    .sidebar-link.active {
+      background: rgba(245,166,35,0.10);
+      color: var(--gold);
+      border-left-color: var(--gold);
+    }
+    .sidebar-link i { width: 18px; text-align: center; font-size: 0.9rem; }
+    .sidebar-link .badge {
+      margin-left: auto;
+      background: var(--red);
+      color: var(--white);
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 20px;
+    }
+    .sidebar-footer {
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .my-account {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 18px 20px 14px;
+    }
+    .my-account-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+      margin-bottom: 12px;
+      width: 100%;
+    }
+    .my-account-avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900; font-size: 1.25rem;
+      color: #000;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 14px rgba(245,166,35,0.35);
+    }
+    .my-account-role {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: capitalize;
+      margin-bottom: 4px;
+    }
+    .my-account-email {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.4);
+      word-break: break-all;
+      line-height: 1.4;
+      padding: 0 4px;
+    }
+    .user-avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.7rem;
+      color: #000;
+      flex-shrink: 0;
+    }
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(229,62,62,0.08);
+      border: 1px solid rgba(229,62,62,0.2);
+      color: var(--red);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .logout-btn:hover { background: rgba(229,62,62,0.15); }
+
+    /* ── MAIN LAYOUT ─────────────────────── */
+    .main-wrapper {
+      margin-left: var(--sidebar-width);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── TOPBAR ──────────────────────────── */
+    .topbar {
+      height: var(--topbar-h);
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 10px; }
+    .topbar-title-group { display: flex; flex-direction: column; }
+    .topbar-title { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--charcoal); }
+    .topbar-breadcrumb { font-size: 0.75rem; color: var(--gray-500); }
+    .topbar-breadcrumb span { color: var(--gold); font-weight: 600; }
+    .topbar-right { display: flex; align-items: center; gap: 16px; }
+    .topbar-icon-btn {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gray-500);
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s, color 0.2s;
+      text-decoration: none;
+    }
+    .topbar-icon-btn:hover { background: rgba(245,166,35,0.1); color: var(--gold); border-color: rgba(245,166,35,0.3); }
+    .notif-dot {
+      position: absolute;
+      top: 7px; right: 7px;
+      width: 7px; height: 7px;
+      background: var(--red);
+      border-radius: 50%;
+      border: 1.5px solid var(--white);
+    }
+    .topbar-profile {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 4px 10px 4px 4px;
+      border-radius: 20px;
+      border: 1px solid var(--gray-200);
+      background: var(--white);
+      transition: border-color 0.2s;
+    }
+    .topbar-profile:hover { border-color: var(--gold); }
+    .topbar-profile .user-avatar { width: 28px; height: 28px; font-size: 0.7rem; }
+    .topbar-profile-name { font-size: 0.82rem; font-weight: 600; color: var(--charcoal); }
+
+    /* ── PAGE CONTENT ────────────────────── */
+    .page-content { flex: 1; padding: 28px; }
+
+    /* ── WELCOME BANNER ──────────────────── */
+    .welcome-banner {
+      background: linear-gradient(135deg, #1a2040 0%, #0d1117 60%, #111128 100%);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .welcome-banner::before {
+      content: '';
+      position: absolute;
+      bottom: -60px; right: -60px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(49,130,206,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .welcome-text h2 { font-family: 'Montserrat', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--white); margin-bottom: 4px; }
+    .welcome-text p { font-size: 0.85rem; color: rgba(255,255,255,0.55); }
+    .welcome-text strong { color: var(--gold); }
+    .welcome-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .welcome-badge {
+      background: rgba(49,130,206,0.18);
+      border: 1px solid rgba(49,130,206,0.35);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #90cdf4;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .support-tag {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.35);
+    }
+    .support-tag strong { color: var(--gold); }
+
+    /* ── STATS GRID ──────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .stat-header { display: flex; align-items: center; justify-content: space-between; }
+    .stat-label { font-size: 0.78rem; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.06em; }
+    .stat-icon {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem;
+    }
+    .stat-icon.gold { background: rgba(245,166,35,0.12); color: var(--gold); }
+    .stat-icon.green { background: rgba(56,161,105,0.12); color: var(--green); }
+    .stat-icon.blue { background: rgba(49,130,206,0.12); color: var(--blue); }
+    .stat-icon.red { background: rgba(229,62,62,0.12); color: var(--red); }
+    .stat-value { font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 900; color: var(--charcoal); line-height: 1; }
+    .stat-sub { font-size: 0.75rem; color: var(--gray-500); }
+    .stat-sub strong { color: var(--charcoal); }
+
+    /* ── TWO-COL ─────────────────────────── */
+    .two-col { display: grid; grid-template-columns: 1fr 360px; gap: 20px; margin-bottom: 24px; }
+    .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
+
+    /* ── CARD ────────────────────────────── */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-title { font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--charcoal); display: flex; align-items: center; gap: 8px; }
+    .card-title i { color: var(--gold); font-size: 0.85rem; }
+    .card-action { font-size: 0.78rem; color: var(--gold); font-weight: 600; text-decoration: none; cursor: pointer; }
+    .card-action:hover { text-decoration: underline; }
+    .card-body { padding: 20px; }
+
+    /* ── PROJECT CARDS ───────────────────── */
+    .project-cards { display: flex; flex-direction: column; gap: 0; }
+    .project-card-item {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--gray-200);
+      transition: background 0.2s;
+    }
+    .project-card-item:last-child { border-bottom: none; }
+    .project-card-item:hover { background: rgba(245,166,35,0.03); }
+    .project-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+    .project-card-name { font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--charcoal); }
+    .project-card-meta { font-size: 0.75rem; color: var(--gray-500); margin-top: 2px; }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+    .status-badge.active { background: rgba(56,161,105,0.1); color: var(--green); }
+    .status-badge.active::before { background: var(--green); }
+    .status-badge.planning { background: rgba(49,130,206,0.1); color: var(--blue); }
+    .status-badge.planning::before { background: var(--blue); }
+    .status-badge.completed { background: rgba(245,166,35,0.1); color: var(--gold-dark); }
+    .status-badge.completed::before { background: var(--gold); }
+    .progress-section { margin-bottom: 10px; }
+    .progress-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .progress-label span { font-size: 0.75rem; color: var(--gray-500); }
+    .progress-label strong { font-size: 0.8rem; font-weight: 700; color: var(--charcoal); }
+    .progress-bar-track {
+      height: 7px;
+      background: var(--gray-200);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+    }
+    .progress-bar-fill.done { background: linear-gradient(90deg, var(--green), #276749); }
+    .project-milestones { display: flex; gap: 8px; flex-wrap: wrap; }
+    .milestone-chip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    .milestone-chip.done { background: rgba(56,161,105,0.1); color: var(--green); }
+    .milestone-chip.current { background: rgba(245,166,35,0.12); color: var(--gold-dark); }
+    .milestone-chip.pending { background: var(--gray-100); color: var(--gray-500); }
+
+    /* ── DOCUMENTS TABLE ─────────────────── */
+    .docs-table { width: 100%; border-collapse: collapse; }
+    .docs-table th {
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--gray-500);
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--gray-200);
+      background: var(--gray-100);
+    }
+    .docs-table td {
+      padding: 12px 16px;
+      font-size: 0.83rem;
+      color: var(--charcoal);
+      border-bottom: 1px solid var(--gray-200);
+      vertical-align: middle;
+    }
+    .docs-table tr:last-child td { border-bottom: none; }
+    .docs-table tr:hover td { background: rgba(245,166,35,0.03); }
+    .doc-type-icon {
+      width: 28px; height: 28px;
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+    }
+    .doc-type-icon.pdf { background: rgba(229,62,62,0.1); color: var(--red); }
+    .doc-type-icon.img { background: rgba(49,130,206,0.1); color: var(--blue); }
+    .doc-type-icon.doc { background: rgba(56,161,105,0.1); color: var(--green); }
+    .doc-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      color: var(--gold);
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .doc-download:hover { background: rgba(245,166,35,0.1); }
+
+    /* ── INVOICE CARD ────────────────────── */
+    .invoice-list { display: flex; flex-direction: column; gap: 0; }
+    .invoice-row {
+      display: flex;
+      align-items: center;
+      padding: 13px 20px;
+      border-bottom: 1px solid var(--gray-200);
+      gap: 12px;
+    }
+    .invoice-row:last-child { border-bottom: none; }
+    .invoice-icon {
+      width: 34px; height: 34px;
+      border-radius: var(--radius-sm);
+      background: rgba(245,166,35,0.10);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold);
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .invoice-info { flex: 1; min-width: 0; }
+    .invoice-num { font-size: 0.83rem; font-weight: 600; color: var(--charcoal); }
+    .invoice-proj { font-size: 0.72rem; color: var(--gray-500); }
+    .invoice-amount { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--charcoal); text-align: right; }
+    .invoice-status { font-size: 0.7rem; font-weight: 700; text-align: right; }
+    .invoice-status.paid { color: var(--green); }
+    .invoice-status.pending { color: var(--orange); }
+    .invoice-status.overdue { color: var(--red); }
+
+    /* ── SUPPORT / MESSAGES ──────────────── */
+    .support-list { display: flex; flex-direction: column; gap: 0; }
+    .support-item {
+      display: flex;
+      gap: 12px;
+      padding: 13px 20px;
+      border-bottom: 1px solid var(--gray-200);
+      align-items: flex-start;
+    }
+    .support-item:last-child { border-bottom: none; }
+    .support-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+    .support-dot.open { background: var(--gold); }
+    .support-dot.closed { background: var(--green); }
+    .support-content { flex: 1; }
+    .support-title { font-size: 0.83rem; font-weight: 600; color: var(--charcoal); }
+    .support-meta { font-size: 0.72rem; color: var(--gray-500); margin-top: 2px; }
+    .support-tag-chip {
+      font-size: 0.68rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .support-tag-chip.open { background: rgba(245,166,35,0.12); color: var(--gold-dark); }
+    .support-tag-chip.closed { background: rgba(56,161,105,0.1); color: var(--green); }
+
+    /* ── CONTACT BOX ─────────────────────── */
+    .contact-box {
+      background: linear-gradient(135deg, rgba(245,166,35,0.06) 0%, rgba(245,166,35,0.02) 100%);
+      border: 1px solid rgba(245,166,35,0.2);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+    }
+    .contact-box i { font-size: 1.8rem; color: var(--gold); margin-bottom: 10px; }
+    .contact-box h4 { font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--charcoal); margin-bottom: 6px; }
+    .contact-box p { font-size: 0.8rem; color: var(--gray-500); margin-bottom: 14px; }
+    .contact-box a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 20px;
+      background: var(--gold);
+      color: #000;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .contact-box a:hover { background: var(--gold-dark); }
+
+    /* ── SIDEBAR OVERLAY ─────────────────── */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 99;
+    }
+    .sidebar-overlay.active { display: block; }
+
+    /* ── MENU TOGGLE (mobile only) ────────── */
+    .menu-toggle-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 34px; height: 34px;
+      border-radius: var(--radius-sm);
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      color: var(--gray-700);
+      cursor: pointer;
+      flex-shrink: 0;
+      font-size: 0.88rem;
+      transition: background 0.2s, color 0.2s;
+    }
+    .menu-toggle-btn:hover { background: rgba(245,166,35,0.1); color: var(--gold); border-color: rgba(245,166,35,0.3); }
+
+    /* ── TABLE SCROLL WRAPPER ─────────────── */
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .table-scroll table { min-width: 560px; }
+
+    /* ── RESPONSIVE ──────────────────────── */
+    @media (max-width: 1100px) {
+      .two-col { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .three-col { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 260px;
+        transform: translateX(-100%);
+        transition: transform 0.28s ease;
+        z-index: 200;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .main-wrapper { margin-left: 0 !important; }
+      .topbar { padding: 0 14px; }
+      .topbar-left { gap: 8px; }
+      .topbar-right { gap: 8px; }
+      .topbar-profile-name { display: none; }
+      .topbar-breadcrumb { display: none; }
+      .topbar-title { font-size: 0.92rem; }
+      .topbar-icon-btn { width: 32px; height: 32px; }
+      .topbar-profile { padding: 3px 8px 3px 3px; }
+      .menu-toggle-btn { display: flex; }
+      .page-content { padding: 14px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .two-col { grid-template-columns: 1fr; }
+      .three-col { grid-template-columns: 1fr; }
+      .welcome-banner { flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px 18px; }
+      .welcome-meta { align-items: flex-start; }
+      .welcome-badge { font-size: 0.7rem; padding: 5px 12px; }
+      .stat-card { padding: 16px; }
+      .stat-value { font-size: 1.5rem; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { gap: 10px; }
+      .stat-value { font-size: 1.25rem; }
+      .stat-label { font-size: 0.7rem; }
+      .page-content { padding: 10px; }
+      .welcome-text h2 { font-size: 1.05rem; }
+      .topbar-icon-btn.hide-xs { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="Stackly logo.png" alt="STACKLY" class="brand-img" style="height:32px;width:auto;">
+      <div class="brand-sub">Client Portal</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">My Portal</div>
+      <a class="sidebar-link active" href="client-dashboard.html">
+        <i class="fas fa-th-large"></i> Dashboard
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="fas fa-hard-hat"></i> My Projects
+        <span class="badge">2</span>
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="fas fa-folder-open"></i> Documents
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="fas fa-images"></i> Site Photos
+      </a>
+
+      <div class="nav-section-label">Finance</div>
+      <a class="sidebar-link" href="#">
+        <i class="fas fa-file-invoice-dollar"></i> Invoices & Payments
+        <span class="badge">1</span>
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="fas fa-receipt"></i> Estimates
+      </a>
+
+      <div class="nav-section-label">Support</div>
+      <a class="sidebar-link" href="#">
+        <i class="fas fa-headset"></i> Support Tickets
+        <span class="badge">1</span>
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="fas fa-comments"></i> Messages
+      </a>
+      <a class="sidebar-link" href="#">
+        <i class="fas fa-cog"></i> Settings
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="my-account">
+        <div class="my-account-label">My Account</div>
+        <div class="my-account-avatar" id="sidebarAvatar">C</div>
+        <div class="my-account-role" id="sidebarRole">Client</div>
+        <div class="my-account-email" id="sidebarEmail">client@stackly.com</div>
+      </div>
+      <div style="padding:0 16px 16px;">
+        <a href="login.html" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ═══════════════════ MAIN ═══════════════════ -->
+  <div class="main-wrapper">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Toggle sidebar">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="topbar-title-group">
+          <div class="topbar-title">My Dashboard</div>
+          <div class="topbar-breadcrumb">Home / <span>Dashboard</span></div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <a href="#" class="topbar-icon-btn" title="Notifications">
+          <i class="fas fa-bell"></i>
+          <span class="notif-dot"></span>
+        </a>
+        <a href="#" class="topbar-icon-btn hide-xs" title="Messages">
+          <i class="fas fa-envelope"></i>
+        </a>
+        <div class="topbar-profile">
+          <div class="user-avatar" id="topbarAvatar" style="width:28px;height:28px;font-size:0.7rem;">C</div>
+          <span class="topbar-profile-name" id="topbarName">client@stackly.com</span>
+          <i class="fas fa-chevron-down" style="font-size:0.65rem;color:#adb5bd;margin-left:2px;"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <main class="page-content">
+
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <div class="welcome-text">
+          <h2>Welcome back, <strong>Kiran</strong> 👋</h2>
+          <p>Your projects are progressing well — last update received 2 hours ago</p>
+        </div>
+        <div class="welcome-meta">
+          <div class="welcome-badge">
+            <i class="fas fa-user-tie"></i> Client Access
+          </div>
+          <div class="support-tag">Dedicated Manager: <strong>Nisha Kumar</strong></div>
+        </div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-label">Active Projects</div>
+            <div class="stat-icon gold"><i class="fas fa-hard-hat"></i></div>
+          </div>
+          <div class="stat-value">2</div>
+          <div class="stat-sub">Metro Link Tower &amp; Sunrise Residency</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-label">Completed</div>
+            <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+          </div>
+          <div class="stat-value">1</div>
+          <div class="stat-sub"><strong>GreenPark Villas</strong> · Pune</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-label">Pending Payment</div>
+            <div class="stat-icon red"><i class="fas fa-rupee-sign"></i></div>
+          </div>
+          <div class="stat-value">₹12L</div>
+          <div class="stat-sub">1 invoice due <strong>15 Jun</strong></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-label">Open Tickets</div>
+            <div class="stat-icon blue"><i class="fas fa-headset"></i></div>
+          </div>
+          <div class="stat-value">1</div>
+          <div class="stat-sub">Avg. response <strong>4 hrs</strong></div>
+        </div>
+      </div>
+
+      <!-- My Projects + Right Panel -->
+      <div class="two-col">
+
+        <!-- Projects -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-hard-hat"></i> My Projects</div>
+            <a href="#" class="card-action">All Projects →</a>
+          </div>
+          <div class="project-cards">
+
+            <!-- Project 1 -->
+            <div class="project-card-item">
+              <div class="project-card-top">
+                <div>
+                  <div class="project-card-name">Metro Link Tower</div>
+                  <div class="project-card-meta">Commercial Complex · Chennai · Started Jan 2026</div>
+                </div>
+                <span class="status-badge active">Active</span>
+              </div>
+              <div class="progress-section">
+                <div class="progress-label">
+                  <span>Overall Progress</span>
+                  <strong>72%</strong>
+                </div>
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill" style="width:72%"></div>
+                </div>
+              </div>
+              <div class="project-milestones">
+                <span class="milestone-chip done"><i class="fas fa-check"></i> Foundation</span>
+                <span class="milestone-chip done"><i class="fas fa-check"></i> Structure</span>
+                <span class="milestone-chip current"><i class="fas fa-spinner"></i> Interiors</span>
+                <span class="milestone-chip pending"><i class="fas fa-clock"></i> Handover</span>
+              </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="project-card-item">
+              <div class="project-card-top">
+                <div>
+                  <div class="project-card-name">Sunrise Residency</div>
+                  <div class="project-card-meta">Residential Villa · Mumbai · Started Oct 2025</div>
+                </div>
+                <span class="status-badge planning">On Hold</span>
+              </div>
+              <div class="progress-section">
+                <div class="progress-label">
+                  <span>Overall Progress</span>
+                  <strong>33%</strong>
+                </div>
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill" style="width:33%"></div>
+                </div>
+              </div>
+              <div class="project-milestones">
+                <span class="milestone-chip done"><i class="fas fa-check"></i> Foundation</span>
+                <span class="milestone-chip current"><i class="fas fa-pause"></i> Permit Wait</span>
+                <span class="milestone-chip pending"><i class="fas fa-clock"></i> Structure</span>
+                <span class="milestone-chip pending"><i class="fas fa-clock"></i> Handover</span>
+              </div>
+            </div>
+
+            <!-- Project 3 — Completed -->
+            <div class="project-card-item">
+              <div class="project-card-top">
+                <div>
+                  <div class="project-card-name">GreenPark Villas</div>
+                  <div class="project-card-meta">Luxury Residential · Pune · Completed Apr 2026</div>
+                </div>
+                <span class="status-badge completed">Completed</span>
+              </div>
+              <div class="progress-section">
+                <div class="progress-label">
+                  <span>Overall Progress</span>
+                  <strong>100%</strong>
+                </div>
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill done" style="width:100%"></div>
+                </div>
+              </div>
+              <div class="project-milestones">
+                <span class="milestone-chip done"><i class="fas fa-check"></i> Foundation</span>
+                <span class="milestone-chip done"><i class="fas fa-check"></i> Structure</span>
+                <span class="milestone-chip done"><i class="fas fa-check"></i> Interiors</span>
+                <span class="milestone-chip done"><i class="fas fa-check"></i> Handover</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+          <!-- Invoices -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="fas fa-file-invoice-dollar"></i> Invoices</div>
+              <a href="#" class="card-action">View All →</a>
+            </div>
+            <div class="invoice-list">
+              <div class="invoice-row">
+                <div class="invoice-icon"><i class="fas fa-file-invoice"></i></div>
+                <div class="invoice-info">
+                  <div class="invoice-num">INV-2026-031</div>
+                  <div class="invoice-proj">Metro Link Tower · Stage 3</div>
+                </div>
+                <div>
+                  <div class="invoice-amount">₹12,00,000</div>
+                  <div class="invoice-status pending">Due Jun 15</div>
+                </div>
+              </div>
+              <div class="invoice-row">
+                <div class="invoice-icon"><i class="fas fa-file-invoice"></i></div>
+                <div class="invoice-info">
+                  <div class="invoice-num">INV-2026-018</div>
+                  <div class="invoice-proj">Metro Link Tower · Stage 2</div>
+                </div>
+                <div>
+                  <div class="invoice-amount">₹18,50,000</div>
+                  <div class="invoice-status paid">Paid ✓</div>
+                </div>
+              </div>
+              <div class="invoice-row">
+                <div class="invoice-icon"><i class="fas fa-file-invoice"></i></div>
+                <div class="invoice-info">
+                  <div class="invoice-num">INV-2026-004</div>
+                  <div class="invoice-proj">GreenPark Villas · Final</div>
+                </div>
+                <div>
+                  <div class="invoice-amount">₹24,00,000</div>
+                  <div class="invoice-status paid">Paid ✓</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Support -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="fas fa-headset"></i> Support Tickets</div>
+              <a href="#" class="card-action">New Ticket →</a>
+            </div>
+            <div class="support-list">
+              <div class="support-item">
+                <div class="support-dot open"></div>
+                <div class="support-content">
+                  <div class="support-title">Permit delay update needed</div>
+                  <div class="support-meta">Sunrise Residency · Opened 3 days ago &nbsp;<span class="support-tag-chip open">Open</span></div>
+                </div>
+              </div>
+              <div class="support-item">
+                <div class="support-dot closed"></div>
+                <div class="support-content">
+                  <div class="support-title">Site access request — visitor pass</div>
+                  <div class="support-meta">Metro Link Tower · Resolved 8 days ago &nbsp;<span class="support-tag-chip closed">Closed</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Manager -->
+          <div class="contact-box">
+            <i class="fas fa-user-tie"></i>
+            <h4>Your Project Manager</h4>
+            <p>Nisha Kumar is your dedicated point of contact for all project queries.</p>
+            <a href="contact.html"><i class="fas fa-paper-plane"></i> Send a Message</a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Documents -->
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-folder-open"></i> Recent Documents</div>
+          <a href="#" class="card-action">View All →</a>
+        </div>
+        <div class="table-scroll">
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Document Name</th>
+              <th>Project</th>
+              <th>Uploaded By</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="doc-type-icon pdf"><i class="fas fa-file-pdf"></i></div></td>
+              <td>Site Plan v3 — Floor Layout</td>
+              <td>Metro Link Tower</td>
+              <td>Arun Patel</td>
+              <td style="color:var(--gray-500);font-size:0.78rem;">05 Jun 2026</td>
+              <td><a href="#" class="doc-download"><i class="fas fa-download"></i> Download</a></td>
+            </tr>
+            <tr>
+              <td><div class="doc-type-icon doc"><i class="fas fa-file-contract"></i></div></td>
+              <td>Revised Scope Agreement</td>
+              <td>Metro Link Tower</td>
+              <td>Nisha Kumar</td>
+              <td style="color:var(--gray-500);font-size:0.78rem;">02 Jun 2026</td>
+              <td><a href="#" class="doc-download"><i class="fas fa-download"></i> Download</a></td>
+            </tr>
+            <tr>
+              <td><div class="doc-type-icon img"><i class="fas fa-images"></i></div></td>
+              <td>Progress Photos — Week 22</td>
+              <td>Metro Link Tower</td>
+              <td>Site Team</td>
+              <td style="color:var(--gray-500);font-size:0.78rem;">01 Jun 2026</td>
+              <td><a href="#" class="doc-download"><i class="fas fa-eye"></i> View</a></td>
+            </tr>
+            <tr>
+              <td><div class="doc-type-icon pdf"><i class="fas fa-file-pdf"></i></div></td>
+              <td>Quality Inspection Report — Q1</td>
+              <td>Sunrise Residency</td>
+              <td>QA Team</td>
+              <td style="color:var(--gray-500);font-size:0.78rem;">28 May 2026</td>
+              <td><a href="#" class="doc-download"><i class="fas fa-download"></i> Download</a></td>
+            </tr>
+            <tr>
+              <td><div class="doc-type-icon doc"><i class="fas fa-file-alt"></i></div></td>
+              <td>Completion Certificate</td>
+              <td>GreenPark Villas</td>
+              <td>Arjun Reddy</td>
+              <td style="color:var(--gray-500);font-size:0.78rem;">10 Apr 2026</td>
+              <td><a href="#" class="doc-download"><i class="fas fa-download"></i> Download</a></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    (function() {
+      const role  = sessionStorage.getItem('stackly_role')  || 'client';
+      const email = sessionStorage.getItem('stackly_email') || 'client@stackly.com';
+      const initial = role.charAt(0).toUpperCase();
+      const roleLabel = role.charAt(0).toUpperCase() + role.slice(1);
+
+      document.getElementById('sidebarAvatar').textContent = initial;
+      document.getElementById('sidebarRole').textContent   = roleLabel;
+      document.getElementById('sidebarEmail').textContent  = email;
+
+      document.getElementById('topbarAvatar').textContent  = initial;
+      document.getElementById('topbarName').textContent    = email;
+    })();
+
+    const toggleBtn = document.getElementById('menuToggleBtn');
+    const sidebar   = document.querySelector('.sidebar');
+    const overlay   = document.getElementById('sidebarOverlay');
+    function openSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    toggleBtn?.addEventListener('click', () => {
+      sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+    });
+    overlay?.addEventListener('click', closeSidebar);
+    document.querySelectorAll('.sidebar-link').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) closeSidebar();
+      });
+    });
+  </script>
+</body>
+</html>

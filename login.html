@@ -93,11 +93,8 @@
   <nav class="navbar scrolled" id="navbar" role="navigation" aria-label="Main navigation">
     <div class="nav-container">
       <a href="index.html" class="nav-brand" aria-label="STACKLY Home">
-        <div class="brand-logo" aria-hidden="true">S</div>
-        <div class="brand-info">
-          <span class="brand-name">STACKLY</span>
-          <span class="brand-tagline">Building Excellence</span>
-        </div>
+        <img src="Stackly logo.png" alt="STACKLY" class="brand-img">
+        <span class="brand-tagline">Constructions</span>
       </a>
 
       <div class="nav-menu" id="navMenu">
@@ -159,11 +156,7 @@
 
         <div class="auth-visual-content">
           <div class="auth-brand">
-            <div class="brand-logo" style="width:56px;height:56px;font-size:1.8rem;" aria-hidden="true">S</div>
-            <div class="brand-info">
-              <span class="brand-name" style="font-size:1.6rem;">STACKLY</span>
-              <span class="brand-tagline">Building Excellence</span>
-            </div>
+            <img src="Stackly logo.png" alt="STACKLY" class="brand-img" style="height:58px;">
           </div>
 
           <h2 class="auth-visual-title">
@@ -197,6 +190,9 @@
       <!-- RIGHT — Login Form -->
       <div class="auth-form-side">
         <div class="auth-form-container">
+          <a href="index.html" class="auth-back-btn">
+            <i class="fas fa-arrow-left"></i> Go Back
+          </a>
           <div class="auth-form-header">
             <p class="auth-welcome">Welcome Back</p>
             <h1 class="auth-title">Sign In to STACKLY</h1>
@@ -264,8 +260,9 @@
                 <input type="checkbox" id="rememberMe" name="remember">
                 <span>Remember me</span>
               </label>
-              <a href="#" class="forgot-link">Forgot password?</a>
+              <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
             </div>
+            <span class="field-error" id="rememberMeError" role="alert"></span>
 
             <!-- Submit -->
             <button type="submit" class="btn btn-primary btn-full btn-ripple">
@@ -300,5 +297,18 @@
   </main>
 
   <script src="script.js"></script>
+  <script>
+  (function () {
+    /* ── Google / Microsoft → 404 (exclude password toggle) ── */
+    document.querySelectorAll('.auth-form button[type="button"]:not(.password-toggle)').forEach(btn => {
+      btn.addEventListener('click', () => { window.location.href = '404.html'; });
+    });
+
+    /* ── Terms / Privacy links → 404 ── */
+    document.querySelectorAll('.terms-link').forEach(link => {
+      link.addEventListener('click', e => { e.preventDefault(); window.location.href = '404.html'; });
+    });
+  })();
+  </script>
 </body>
 </html>

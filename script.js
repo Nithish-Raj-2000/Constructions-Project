@@ -224,55 +224,106 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ── CONTACT FORM VALIDATION ─────────────────────────────── */
   const contactForm = document.getElementById('contactForm');
   if (contactForm) {
+
+    function cfSetErr(id, errId, msg) {
+      const el  = document.getElementById(id);
+      const err = document.getElementById(errId);
+      if (el)  { el.style.borderColor = '#fc8181'; el.style.boxShadow = '0 0 0 3px rgba(252,129,129,0.2)'; el.classList.add('error'); }
+      if (err) err.textContent = msg;
+    }
+    function cfClrErr(id, errId) {
+      const el  = document.getElementById(id);
+      const err = document.getElementById(errId);
+      if (el)  { el.style.borderColor = ''; el.style.boxShadow = ''; el.classList.remove('error'); }
+      if (err) err.textContent = '';
+    }
+
     contactForm.addEventListener('submit', e => {
       e.preventDefault();
       let valid = true;
 
-      function validate(id, errorId, check, msg) {
-        const el = document.getElementById(id);
-        const err = document.getElementById(errorId);
-        if (!el || !err) return;
-        if (!check(el.value.trim())) {
-          err.textContent = msg;
-          el.classList.add('error');
-          valid = false;
-        } else {
-          err.textContent = '';
-          el.classList.remove('error');
-        }
-      }
+      /* First Name */
+      const fn = document.getElementById('firstName').value.trim();
+      if (!fn) {
+        cfSetErr('firstName','firstNameError','First name is required.');
+        valid = false;
+      } else if (fn.length < 3) {
+        cfSetErr('firstName','firstNameError','First name must be at least 3 characters.');
+        valid = false;
+      } else if (!/^[a-zA-Z\s]+$/.test(fn)) {
+        cfSetErr('firstName','firstNameError','First name can only contain letters and spaces.');
+        valid = false;
+      } else { cfClrErr('firstName','firstNameError'); }
 
-      validate('firstName', 'firstNameError', v => v.length >= 2, 'First name must be at least 2 characters.');
-      validate('lastName', 'lastNameError', v => v.length >= 2, 'Last name must be at least 2 characters.');
-      validate('email', 'emailError', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), 'Enter a valid email address.');
-      validate('phone', 'phoneError', v => /^[\d\s\+\-\(\)]{7,15}$/.test(v), 'Enter a valid phone number.');
-      validate('message', 'messageError', v => v.length >= 20, 'Please provide at least 20 characters about your project.');
+      /* Last Name */
+      const ln = document.getElementById('lastName').value.trim();
+      if (!ln) {
+        cfSetErr('lastName','lastNameError','Last name is required.');
+        valid = false;
+      } else if (ln.length < 3) {
+        cfSetErr('lastName','lastNameError','Last name must be at least 3 characters.');
+        valid = false;
+      } else if (!/^[a-zA-Z\s]+$/.test(ln)) {
+        cfSetErr('lastName','lastNameError','Last name can only contain letters and spaces.');
+        valid = false;
+      } else { cfClrErr('lastName','lastNameError'); }
 
-      if (valid) {
-        const btn = contactForm.querySelector('button[type="submit"]');
-        const successEl = document.getElementById('formSuccess');
-        if (btn) {
-          btn.disabled = true;
-          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-        }
-        setTimeout(() => {
-          if (btn) {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
-          }
-          successEl?.classList.add('show');
-          contactForm.reset();
-          setTimeout(() => successEl?.classList.remove('show'), 5000);
-        }, 1800);
-      }
+      /* Email */
+      const em = document.getElementById('email').value.trim();
+      if (!em) {
+        cfSetErr('email','emailError','Email address is required.');
+        valid = false;
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) {
+        cfSetErr('email','emailError','Please enter a valid email address (e.g. you@example.com).');
+        valid = false;
+      } else { cfClrErr('email','emailError'); }
+
+      /* Phone — digits only, 10–12 digits */
+      const ph       = document.getElementById('phone').value.trim();
+      const phDigits = ph.replace(/\s/g, '');
+      if (!ph) {
+        cfSetErr('phone','phoneError','Phone number is required.');
+        valid = false;
+      } else if (!/^\d+$/.test(phDigits)) {
+        cfSetErr('phone','phoneError','Phone number must contain numbers only.');
+        valid = false;
+      } else if (phDigits.length < 10) {
+        cfSetErr('phone','phoneError','Phone number must be at least 10 digits.');
+        valid = false;
+      } else if (phDigits.length > 12) {
+        cfSetErr('phone','phoneError','Phone number must not exceed 12 digits.');
+        valid = false;
+      } else { cfClrErr('phone','phoneError'); }
+
+      /* Message */
+      const msg = document.getElementById('message').value.trim();
+      if (!msg) {
+        cfSetErr('message','messageError','Project details are required.');        valid = false;
+      } else if (msg.length < 20) {
+        cfSetErr('message','messageError','Please provide at least 20 characters describing your project.'); valid = false;
+      } else { cfClrErr('message','messageError'); }
+
+      if (!valid) return;
+
+      const btn = contactForm.querySelector('button[type="submit"]');
+      const successEl = document.getElementById('formSuccess');
+      if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...'; }
+
+      setTimeout(() => {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message'; }
+        successEl?.classList.add('show');
+        contactForm.reset();
+        ['firstName','lastName','email','phone','message'].forEach(fid => {
+          const fel = document.getElementById(fid);
+          if (fel) { fel.style.borderColor = ''; fel.style.boxShadow = ''; fel.classList.remove('error'); }
+        });
+        setTimeout(() => successEl?.classList.remove('show'), 5000);
+      }, 1800);
     });
 
+    /* Real-time error clearing */
     ['firstName','lastName','email','phone','message'].forEach(id => {
-      document.getElementById(id)?.addEventListener('input', () => {
-        document.getElementById(id)?.classList.remove('error');
-        const errEl = document.getElementById(id + 'Error');
-        if (errEl) errEl.textContent = '';
-      });
+      document.getElementById(id)?.addEventListener('input', () => cfClrErr(id, id + 'Error'));
     });
   }
 
@@ -429,161 +480,449 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.btn-nav-signup')?.classList.toggle('active-auth', page === 'signup.html');
   }
 
+  /* ── AUTH HELPERS ────────────────────────────────────────── */
+
+  /* Sanitize input: strip tags and dangerous patterns */
+  function sanitize(str) {
+    return String(str)
+      .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+      .replace(/<iframe[\s\S]*?>[\s\S]*?<\/iframe>/gi, '')
+      .replace(/<object[\s\S]*?>[\s\S]*?<\/object>/gi, '')
+      .replace(/<[^>]+>/g, '')
+      .replace(/[<>"'`]/g, c => ({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','`':'&#96;'})[c]);
+  }
+
+  /* Toast notification */
+  function showToast(msg, type) {
+    let t = document.getElementById('stacklyToast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'stacklyToast';
+      t.className = 'stackly-toast';
+      document.body.appendChild(t);
+    }
+    t.className = `stackly-toast toast-${type}`;
+    t.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${msg}`;
+    requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('show')));
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  /* Get the .field-wrap parent of an input (where border/shadow live) */
+  function getWrap(id) {
+    const el = document.getElementById(id);
+    return el?.closest('.field-wrap') || el;
+  }
+
+  function authSetErr(id, errId, msg) {
+    const wrap = getWrap(id);
+    const err  = document.getElementById(errId);
+    if (wrap) { wrap.classList.remove('field-success'); wrap.classList.add('field-error-state'); }
+    if (err)  { err.textContent = msg; err.style.color = ''; }
+  }
+  function authClrErr(id, errId) {
+    const wrap = getWrap(id);
+    const err  = document.getElementById(errId);
+    if (wrap) wrap.classList.remove('field-error-state', 'field-success');
+    if (err)  { err.textContent = ''; err.style.color = ''; }
+  }
+  function authSetSuccess(id, errId) {
+    const wrap = getWrap(id);
+    const err  = document.getElementById(errId);
+    if (wrap) { wrap.classList.remove('field-error-state'); wrap.classList.add('field-success'); }
+    if (err)  { err.textContent = ''; err.style.color = ''; }
+  }
+
   /* ── AUTH FORM: LOGIN ────────────────────────────────────── */
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
-    const pwdInput = document.getElementById('loginPassword');
-    const toggleBtn = document.getElementById('toggleLoginPwd');
+    const loginPwdEl  = document.getElementById('loginPassword');
+    const loginToggle = document.getElementById('toggleLoginPwd');
+    const loginBtn    = loginForm.querySelector('button[type="submit"]');
 
-    toggleBtn?.addEventListener('click', () => {
-      const isText = pwdInput.type === 'text';
-      pwdInput.type = isText ? 'password' : 'text';
-      toggleBtn.innerHTML = isText ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    /* Start with button disabled */
+    if (loginBtn) loginBtn.disabled = true;
+
+    /* Password toggle */
+    loginToggle?.addEventListener('click', () => {
+      const show = loginPwdEl.type === 'password';
+      loginPwdEl.type = show ? 'text' : 'password';
+      loginToggle.innerHTML = show ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
     });
 
+    /* Ensure form starts empty on every page load */
+    const _emailEl = document.getElementById('loginEmail');
+    const _remEl   = document.getElementById('rememberMe');
+    if (_emailEl) _emailEl.value = '';
+    if (_remEl)   _remEl.checked = false;
+
+    /* Check fields (excluding checkbox) → enable/disable button */
+    function refreshLoginBtn() {
+      const role  = document.getElementById('loginRole')?.value;
+      const email = (document.getElementById('loginEmail')?.value || '').trim();
+      const pwd   = loginPwdEl?.value || '';
+      const ok = role &&
+                 /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) &&
+                 pwd.length >= 8 && pwd.length <= 32;
+      if (loginBtn) loginBtn.disabled = !ok;
+    }
+
+    /* Field validators */
+    function validateLEmail(showSuccess) {
+      const raw   = document.getElementById('loginEmail')?.value || '';
+      const email = raw.trim();
+      /* Auto-trim */
+      if (raw !== email) document.getElementById('loginEmail').value = email;
+      if (!email) {
+        authSetErr('loginEmail', 'loginEmailError', 'Email address is required.');
+        return false;
+      }
+      if (/\s/.test(email)) {
+        authSetErr('loginEmail', 'loginEmailError', 'Email cannot contain spaces.');
+        return false;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        authSetErr('loginEmail', 'loginEmailError', 'Please enter a valid email address.');
+        return false;
+      }
+      showSuccess ? authSetSuccess('loginEmail', 'loginEmailError') : authClrErr('loginEmail', 'loginEmailError');
+      return true;
+    }
+
+    function validateLPassword(showSuccess) {
+      const pwd = loginPwdEl?.value || '';
+      if (!pwd) {
+        authSetErr('loginPassword', 'loginPasswordError', 'Password is required.');
+        return false;
+      }
+      if (pwd.length < 8) {
+        authSetErr('loginPassword', 'loginPasswordError', 'Password must contain at least 8 characters.');
+        return false;
+      }
+      if (pwd.length > 32) {
+        authSetErr('loginPassword', 'loginPasswordError', 'Password must not exceed 32 characters.');
+        return false;
+      }
+      showSuccess ? authSetSuccess('loginPassword', 'loginPasswordError') : authClrErr('loginPassword', 'loginPasswordError');
+      return true;
+    }
+
+    /* Real-time listeners */
+    document.getElementById('loginRole')?.addEventListener('change', () => {
+      const role = document.getElementById('loginRole')?.value;
+      if (role) authSetSuccess('loginRole', 'loginRoleError');
+      else      authSetErr('loginRole', 'loginRoleError', 'Please select your access type.');
+      refreshLoginBtn();
+    });
+
+    document.getElementById('loginEmail')?.addEventListener('input', () => {
+      if (document.getElementById('loginEmail').value.trim()) validateLEmail(false);
+      else authClrErr('loginEmail', 'loginEmailError');
+      refreshLoginBtn();
+    });
+    document.getElementById('loginEmail')?.addEventListener('blur', () => {
+      if (document.getElementById('loginEmail').value.trim()) validateLEmail(true);
+      refreshLoginBtn();
+    });
+
+    loginPwdEl?.addEventListener('input', () => {
+      if (loginPwdEl.value) validateLPassword(false);
+      else authClrErr('loginPassword', 'loginPasswordError');
+      refreshLoginBtn();
+    });
+    loginPwdEl?.addEventListener('blur', () => {
+      if (loginPwdEl.value) validateLPassword(true);
+      refreshLoginBtn();
+    });
+
+    document.getElementById('rememberMe')?.addEventListener('change', () => {
+      if (document.getElementById('rememberMe').checked)
+        document.getElementById('rememberMeError').textContent = '';
+      refreshLoginBtn();
+    });
+
+    /* Submit */
     loginForm.addEventListener('submit', e => {
       e.preventDefault();
-      const alert = document.getElementById('loginAlert');
+      const alertEl = document.getElementById('loginAlert');
+      if (alertEl) { alertEl.className = 'auth-alert'; alertEl.innerHTML = ''; }
+
       let valid = true;
 
-      function vField(id, errId, check, msg) {
-        const el = document.getElementById(id);
-        const err = document.getElementById(errId);
-        if (!check(el?.value?.trim() || '')) {
-          if (err) err.textContent = msg;
-          el?.classList.add('error');
-          valid = false;
-        } else {
-          if (err) err.textContent = '';
-          el?.classList.remove('error');
-        }
+      const role = document.getElementById('loginRole')?.value;
+      if (!role) {
+        authSetErr('loginRole', 'loginRoleError', 'Please select your access type.');
+        valid = false;
+      } else { authSetSuccess('loginRole', 'loginRoleError'); }
+
+      if (!validateLEmail(true))    valid = false;
+      if (!validateLPassword(true)) valid = false;
+
+      /* Remember Me checkbox */
+      const rememberEl  = document.getElementById('rememberMe');
+      const rememberErr = document.getElementById('rememberMeError');
+      if (rememberEl && !rememberEl.checked) {
+        rememberErr.textContent = 'Please check the checkbox to continue.';
+        valid = false;
+      } else {
+        if (rememberErr) rememberErr.textContent = '';
       }
 
-      vField('loginRole', 'loginRoleError', v => v !== '', 'Please select your role.');
-      vField('loginEmail', 'loginEmailError', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), 'Enter a valid email.');
-      vField('loginPassword', 'loginPasswordError', v => v.length >= 6, 'Password must be at least 6 characters.');
+      if (!valid) {
+        loginForm.querySelector('.field-error-state')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
 
-      if (valid) {
-        const btn = loginForm.querySelector('button[type="submit"]');
-        if (btn) {
-          btn.disabled = true;
-          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
-        }
+      const email = sanitize(document.getElementById('loginEmail').value.trim());
+      const msgs  = ['Signing In...', 'Authenticating...', 'Please Wait...'];
+      const lmsg  = msgs[Math.floor(Math.random() * msgs.length)];
+
+      if (loginBtn) { loginBtn.disabled = true; loginBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${lmsg}`; }
+
+      const remEl = document.getElementById('rememberMe');
+      localStorage.removeItem('stackly_remember_email');
+
+      sessionStorage.setItem('stackly_role',  role);
+      sessionStorage.setItem('stackly_email', email);
+
+      /* Immediately clear email, password, checkbox and all field states */
+      const emailField  = document.getElementById('loginEmail');
+      const pwdField    = loginPwdEl;
+      const remErrField = document.getElementById('rememberMeError');
+      if (emailField) { emailField.value = ''; }
+      if (pwdField)   { pwdField.value = ''; }
+      if (remEl)      { remEl.checked = false; }
+      if (remErrField)  remErrField.textContent = '';
+      /* Remove all field-wrap visual states */
+      loginForm.querySelectorAll('.field-wrap').forEach(w => w.classList.remove('field-success', 'field-error-state'));
+      document.getElementById('loginEmailError').textContent    = '';
+      document.getElementById('loginPasswordError').textContent = '';
+      refreshLoginBtn();
+
+      setTimeout(() => {
+        showToast('Login successful! Redirecting...', 'success');
         setTimeout(() => {
-          if (btn) {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
-          }
-          if (alert) {
-            alert.className = 'auth-alert success show';
-            alert.innerHTML = '<i class="fas fa-check-circle"></i> Login successful! Redirecting...';
-          }
-        }, 1800);
-      }
+          window.location.href = role === 'admin' ? 'admin-dashboard.html' : 'client-dashboard.html';
+        }, 1000);
+      }, 1400);
     });
   }
 
   /* ── AUTH FORM: SIGNUP ───────────────────────────────────── */
   const signupForm = document.getElementById('signupForm');
   if (signupForm) {
-    const pwdInput = document.getElementById('signupPassword');
-    const toggleBtn = document.getElementById('toggleSignupPwd');
-    const confirmInput = document.getElementById('signupConfirm');
-    const toggleConfirm = document.getElementById('toggleConfirmPwd');
-    const strengthBar = document.querySelector('.strength-fill');
-    const strengthText = document.querySelector('.strength-text');
+    const signupPwdEl   = document.getElementById('signupPassword');
+    const signupToggle  = document.getElementById('toggleSignupPwd');
+    const confirmEl     = document.getElementById('signupConfirm');
+    const confirmToggle = document.getElementById('toggleConfirmPwd');
+    const strengthBar   = document.querySelector('.strength-fill');
+    const strengthText  = document.querySelector('.strength-text');
+    const PWD_REGEX     = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+    const signupBtn = signupForm.querySelector('button[type="submit"]');
 
-    toggleBtn?.addEventListener('click', () => {
-      const isText = pwdInput.type === 'text';
-      pwdInput.type = isText ? 'password' : 'text';
-      toggleBtn.innerHTML = isText ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    /* Password toggles */
+    signupToggle?.addEventListener('click', () => {
+      const show = signupPwdEl.type === 'password';
+      signupPwdEl.type = show ? 'text' : 'password';
+      signupToggle.innerHTML = show ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+    });
+    confirmToggle?.addEventListener('click', () => {
+      const show = confirmEl.type === 'password';
+      confirmEl.type = show ? 'text' : 'password';
+      confirmToggle.innerHTML = show ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
     });
 
-    toggleConfirm?.addEventListener('click', () => {
-      const isText = confirmInput.type === 'text';
-      confirmInput.type = isText ? 'password' : 'text';
-      toggleConfirm.innerHTML = isText ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    /* Live requirements checker */
+    function setReq(reqId, met) {
+      const el = document.getElementById(reqId);
+      if (!el) return;
+      el.classList.toggle('met', met);
+      const icon = el.querySelector('i');
+      if (icon) icon.className = met ? 'fas fa-check-circle' : 'fas fa-circle';
+    }
+
+    /* Strength meter + requirements */
+    function updateStrength(val) {
+      const hasLen  = val.length >= 8;
+      const hasUp   = /[A-Z]/.test(val);
+      const hasLow  = /[a-z]/.test(val);
+      const hasNum  = /\d/.test(val);
+      const hasSpec = /[@$!%*?&]/.test(val);
+      setReq('req-length',  hasLen);
+      setReq('req-upper',   hasUp);
+      setReq('req-lower',   hasLow);
+      setReq('req-number',  hasNum);
+      setReq('req-special', hasSpec);
+      const score  = [hasLen, hasUp, hasLow, hasNum, hasSpec].filter(Boolean).length;
+      const levels = [
+        { label: '',            pct: 0,   color: '#e2e8f0' },
+        { label: 'Weak',        pct: 20,  color: '#e53e3e' },
+        { label: 'Weak',        pct: 40,  color: '#dd6b20' },
+        { label: 'Medium',      pct: 60,  color: '#d69e2e' },
+        { label: 'Strong',      pct: 80,  color: '#68d391' },
+        { label: 'Very Strong', pct: 100, color: '#38a169' },
+      ];
+      const lv = val ? levels[score] : levels[0];
+      if (strengthBar)  { strengthBar.style.width = lv.pct + '%'; strengthBar.style.background = lv.color; }
+      if (strengthText) strengthText.textContent = lv.label;
+    }
+
+    /* Individual field validators */
+    function valName(showSuccess) {
+      const raw  = document.getElementById('signupName')?.value || '';
+      const name = raw.trim();
+      if (!name)          { authSetErr('signupName','signupNameError','Full name is required.');                   return false; }
+      if (name.length < 3) { authSetErr('signupName','signupNameError','Full name must be at least 3 characters.'); return false; }
+      if (name.length > 50){ authSetErr('signupName','signupNameError','Full name must not exceed 50 characters.');  return false; }
+      if (/\d/.test(name)) { authSetErr('signupName','signupNameError','Numbers are not allowed in name.');          return false; }
+      if (!/^[A-Za-z\s]+$/.test(name)) { authSetErr('signupName','signupNameError','Enter a valid name.'); return false; }
+      showSuccess ? authSetSuccess('signupName','signupNameError') : authClrErr('signupName','signupNameError');
+      return true;
+    }
+
+    function valEmail(showSuccess) {
+      const raw   = document.getElementById('signupEmail')?.value || '';
+      const email = raw.toLowerCase().trim();
+      document.getElementById('signupEmail').value = raw.toLowerCase();
+      if (!email)           { authSetErr('signupEmail','signupEmailError','Email address is required.');   return false; }
+      if (/\s/.test(email)) { authSetErr('signupEmail','signupEmailError','Email cannot contain spaces.'); return false; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        authSetErr('signupEmail','signupEmailError','Enter a valid email address.');
+        return false;
+      }
+      showSuccess ? authSetSuccess('signupEmail','signupEmailError') : authClrErr('signupEmail','signupEmailError');
+      return true;
+    }
+
+    function valPhone(showSuccess) {
+      const ph = (document.getElementById('signupPhone')?.value || '').trim();
+      if (!ph)                     { authSetErr('signupPhone','signupPhoneError','Phone number is required.');            return false; }
+      if (!/^\d+$/.test(ph))       { authSetErr('signupPhone','signupPhoneError','Enter a valid phone number.');          return false; }
+      if (ph.length < 10 || ph.length > 15) {
+        authSetErr('signupPhone','signupPhoneError','Phone number must contain 10–15 digits.');
+        return false;
+      }
+      showSuccess ? authSetSuccess('signupPhone','signupPhoneError') : authClrErr('signupPhone','signupPhoneError');
+      return true;
+    }
+
+    function valPassword(showSuccess) {
+      const pwd = signupPwdEl?.value || '';
+      if (!pwd) { authSetErr('signupPassword','signupPasswordError','Password is required.'); return false; }
+      if (!PWD_REGEX.test(pwd)) {
+        authSetErr('signupPassword','signupPasswordError','Password must meet all the requirements below.');
+        return false;
+      }
+      showSuccess ? authSetSuccess('signupPassword','signupPasswordError') : authClrErr('signupPassword','signupPasswordError');
+      return true;
+    }
+
+    function valConfirm(showSuccess) {
+      const conf    = confirmEl?.value || '';
+      const pwd     = signupPwdEl?.value || '';
+      const confErr = document.getElementById('signupConfirmError');
+      if (!conf) {
+        authSetErr('signupConfirm','signupConfirmError','Confirm your password.');
+        if (confErr) confErr.style.color = '';
+        return false;
+      }
+      if (conf !== pwd) {
+        authSetErr('signupConfirm','signupConfirmError','Passwords do not match.');
+        if (confErr) confErr.style.color = '';
+        return false;
+      }
+      const wrap = getWrap('signupConfirm');
+      if (wrap) { wrap.classList.remove('field-error-state'); if (showSuccess) wrap.classList.add('field-success'); }
+      if (confErr) { confErr.textContent = showSuccess ? '✓ Passwords match.' : ''; confErr.style.color = '#38a169'; }
+      return true;
+    }
+
+    /* Real-time listeners */
+    signupPwdEl?.addEventListener('input', () => {
+      updateStrength(signupPwdEl.value);
+      if (signupPwdEl.value) valPassword(false); else authClrErr('signupPassword','signupPasswordError');
+      if (confirmEl?.value) valConfirm(false);
+    });
+    signupPwdEl?.addEventListener('blur', () => { if (signupPwdEl.value) valPassword(true); });
+
+    document.getElementById('signupName')?.addEventListener('input',  () => { if (document.getElementById('signupName').value.trim()) valName(false); else authClrErr('signupName','signupNameError'); });
+    document.getElementById('signupName')?.addEventListener('blur',   () => { if (document.getElementById('signupName').value.trim()) valName(true); });
+
+    document.getElementById('signupEmail')?.addEventListener('input', () => { if (document.getElementById('signupEmail').value) valEmail(false); else authClrErr('signupEmail','signupEmailError'); });
+    document.getElementById('signupEmail')?.addEventListener('blur',  () => { if (document.getElementById('signupEmail').value) valEmail(true); });
+
+    document.getElementById('signupPhone')?.addEventListener('input', e => {
+      e.target.value = e.target.value.replace(/[^\d]/g, '');
+      if (e.target.value) valPhone(false); else authClrErr('signupPhone','signupPhoneError');
+    });
+    document.getElementById('signupPhone')?.addEventListener('blur',  () => { if (document.getElementById('signupPhone').value) valPhone(true); });
+
+    confirmEl?.addEventListener('input', () => {
+      if (confirmEl.value) valConfirm(false);
+      else { authClrErr('signupConfirm','signupConfirmError'); document.getElementById('signupConfirmError').style.color = ''; }
+    });
+    confirmEl?.addEventListener('blur',  () => { if (confirmEl.value) valConfirm(true); });
+
+    document.getElementById('termsCheck')?.addEventListener('change', () => {
+      document.getElementById('termsError').textContent = '';
+      document.getElementById('termsCheck').closest('.checkbox-wrap').style.color = '';
     });
 
-    pwdInput?.addEventListener('input', () => {
-      const val = pwdInput.value;
-      let strength = 0;
-      if (val.length >= 8) strength++;
-      if (/[A-Z]/.test(val)) strength++;
-      if (/[0-9]/.test(val)) strength++;
-      if (/[^A-Za-z0-9]/.test(val)) strength++;
-      const colors = ['#e53e3e','#dd6b20','#d69e2e','#38a169'];
-      const labels = ['Weak','Fair','Good','Strong'];
-      const pct = (strength / 4) * 100;
-      if (strengthBar) { strengthBar.style.width = pct + '%'; strengthBar.style.background = colors[strength - 1] || '#e2e8f0'; }
-      if (strengthText) strengthText.textContent = strength > 0 ? labels[strength - 1] : '';
-    });
-
+    /* Submit */
     signupForm.addEventListener('submit', e => {
       e.preventDefault();
       let valid = true;
+      let firstEl = null;
 
-      function vField(id, errId, check, msg) {
-        const el = document.getElementById(id);
-        const err = document.getElementById(errId);
-        if (!check(el?.value?.trim() || '')) {
-          if (err) err.textContent = msg;
-          el?.classList.add('error');
-          valid = false;
-        } else {
-          if (err) err.textContent = '';
-          el?.classList.remove('error');
-        }
-      }
-
-      vField('signupRole', 'signupRoleError', v => v !== '', 'Please select your role.');
-      vField('signupName', 'signupNameError', v => v.length >= 3, 'Full name must be at least 3 characters.');
-      vField('signupEmail', 'signupEmailError', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), 'Enter a valid email address.');
-      vField('signupPassword', 'signupPasswordError', v => v.length >= 8, 'Password must be at least 8 characters.');
-
-      const pwd = document.getElementById('signupPassword')?.value;
-      const conf = document.getElementById('signupConfirm')?.value;
-      const confErr = document.getElementById('signupConfirmError');
-      const confEl = document.getElementById('signupConfirm');
-      if (pwd !== conf) {
-        if (confErr) confErr.textContent = 'Passwords do not match.';
-        confEl?.classList.add('error');
+      /* Role */
+      const role = document.getElementById('signupRole')?.value;
+      if (!role) {
+        document.getElementById('signupRoleError').textContent = 'Please select an account type.';
         valid = false;
+        if (!firstEl) firstEl = document.getElementById('signupRoleError');
       } else {
-        if (confErr) confErr.textContent = '';
-        confEl?.classList.remove('error');
+        document.getElementById('signupRoleError').textContent = '';
       }
 
-      const terms = document.getElementById('termsCheck');
+      if (!valName(true))     { valid = false; if (!firstEl) firstEl = document.getElementById('signupName'); }
+      if (!valEmail(true))    { valid = false; if (!firstEl) firstEl = document.getElementById('signupEmail'); }
+      if (!valPhone(true))    { valid = false; if (!firstEl) firstEl = document.getElementById('signupPhone'); }
+      if (!valPassword(true)) { valid = false; if (!firstEl) firstEl = document.getElementById('signupPassword'); }
+      if (!valConfirm(true))  { valid = false; if (!firstEl) firstEl = document.getElementById('signupConfirm'); }
+
+      /* Terms */
+      const termsEl  = document.getElementById('termsCheck');
       const termsErr = document.getElementById('termsError');
-      if (terms && !terms.checked) {
-        if (termsErr) termsErr.textContent = 'You must accept the terms to proceed.';
+      if (termsEl && !termsEl.checked) {
+        termsErr.textContent = 'Please accept the Terms of Service and Privacy Policy.';
+        termsEl.closest('.checkbox-wrap').style.color = '#fc8181';
         valid = false;
+        if (!firstEl) firstEl = termsEl;
       } else {
-        if (termsErr) termsErr.textContent = '';
+        termsErr.textContent = '';
+        if (termsEl) termsEl.closest('.checkbox-wrap').style.color = '';
       }
 
-      if (valid) {
-        const btn = signupForm.querySelector('button[type="submit"]');
-        const alert = document.getElementById('signupAlert');
-        if (btn) {
-          btn.disabled = true;
-          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
-        }
-        setTimeout(() => {
-          if (btn) {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
-          }
-          if (alert) {
-            alert.className = 'auth-alert success show';
-            alert.innerHTML = '<i class="fas fa-check-circle"></i> Account created! Welcome to STACKLY.';
-          }
-          signupForm.reset();
-          if (strengthBar) strengthBar.style.width = '0';
-          if (strengthText) strengthText.textContent = '';
-        }, 1800);
+      if (!valid) {
+        firstEl?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
       }
+
+      const btn = signupForm.querySelector('button[type="submit"]');
+      if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...'; }
+
+      setTimeout(() => {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account'; }
+        showToast('Account created! Redirecting to login...', 'success');
+        signupForm.reset();
+        if (strengthBar)  { strengthBar.style.width = '0'; strengthBar.style.background = '#e2e8f0'; }
+        if (strengthText) strengthText.textContent = '';
+        signupForm.querySelectorAll('.field-wrap').forEach(w => w.classList.remove('field-success','field-error-state'));
+        ['req-length','req-upper','req-lower','req-number','req-special'].forEach(id => setReq(id, false));
+        const confErr = document.getElementById('signupConfirmError');
+        if (confErr) confErr.style.color = '';
+        setTimeout(() => { window.location.href = 'login.html'; }, 1500);
+      }, 1800);
     });
   }
 
@@ -595,7 +934,75 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  /* ── NEWSLETTER VALIDATION & REDIRECT ───────────────────── */
+  document.querySelectorAll('.newsletter-form').forEach(form => {
+    const input = form.querySelector('input[type="email"]');
+    const btn   = form.querySelector('button');
+    if (!input || !btn) return;
+
+    const errMsg = document.createElement('p');
+    errMsg.style.cssText = [
+      'font-size:0.7rem',
+      'color:#fc8181',
+      'margin-top:5px',
+      'font-family:var(--font-accent)',
+      'display:none',
+      'text-align:left'
+    ].join(';');
+    errMsg.textContent = 'Please enter a valid email address.';
+    form.insertAdjacentElement('afterend', errMsg);
+
+    const isValid = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+
+    btn.addEventListener('click', () => {
+      if (!isValid(input.value)) {
+        input.style.borderColor = '#fc8181';
+        input.style.boxShadow   = '0 0 0 3px rgba(252,129,129,0.2)';
+        errMsg.style.display    = 'block';
+        input.focus();
+        return;
+      }
+      input.style.borderColor = '';
+      input.style.boxShadow   = '';
+      errMsg.style.display    = 'none';
+      input.value             = '';
+      window.location.href    = '404.html';
+    });
+
+    input.addEventListener('input', () => {
+      input.style.borderColor = '';
+      input.style.boxShadow   = '';
+      errMsg.style.display    = 'none';
+    });
+
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); btn.click(); }
+    });
+  });
+
+  /* ── FOOTER BOTTOM LINKS → 404 ───────────────────────────── */
+  document.querySelectorAll('.footer-bottom-links a').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      window.location.href = '404.html';
+    });
+  });
+
+  /* ── CTA BUTTONS & SOCIAL ICONS → 404 ───────────────────── */
+  document.querySelectorAll([
+    'a.btn',
+    'a.service-link',
+    'a.project-btn',
+    'a.footer-social-link',
+    'a.social-link',
+    'a.contact-social-link'
+  ].join(', ')).forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      window.location.href = '404.html';
+    });
+  });
+
   /* ── INIT ────────────────────────────────────────────────── */
   handleScrollTop();
-  updateActiveLink();
 });
