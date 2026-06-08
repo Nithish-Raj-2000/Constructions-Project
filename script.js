@@ -69,13 +69,28 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ── SMOOTH SCROLL ───────────────────────────────────────── */
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', e => {
-      const target = document.querySelector(anchor.getAttribute('href'));
+      const hash = anchor.getAttribute('href').replace('#', '');
+      const target = document.getElementById(hash);
       if (target) {
         e.preventDefault();
         const offset = navbar ? navbar.offsetHeight + 8 : 80;
         const top = target.getBoundingClientRect().top + window.scrollY - offset;
         window.scrollTo({ top, behavior: 'smooth' });
         closeMenu();
+      } else {
+        // Check if hash matches a project filter button
+        const filterBtn = document.querySelector(`.filter-btn[data-filter="${hash}"]`);
+        if (filterBtn) {
+          e.preventDefault();
+          filterBtn.click();
+          const filterBar = document.querySelector('.project-filters');
+          if (filterBar) {
+            const offset = navbar ? navbar.offsetHeight + 8 : 80;
+            const top = filterBar.getBoundingClientRect().top + window.scrollY - offset;
+            window.scrollTo({ top, behavior: 'smooth' });
+          }
+          closeMenu();
+        }
       }
     });
   });
@@ -141,6 +156,37 @@ document.addEventListener('DOMContentLoaded', () => {
       target?.classList.add('active');
     });
   });
+
+  /* ── HASH-BASED NAVIGATION ───────────────────────────────── */
+  (function handleHashNavigation() {
+    const hash = window.location.hash.replace('#', '');
+    if (!hash) return;
+
+    // Projects page: activate matching filter button then scroll to filter bar
+    const matchingFilter = document.querySelector(`.filter-btn[data-filter="${hash}"]`);
+    if (matchingFilter) {
+      setTimeout(() => {
+        matchingFilter.click();
+        const filterBar = document.querySelector('.project-filters');
+        if (filterBar) {
+          const offset = navbar ? navbar.offsetHeight + 8 : 80;
+          const top = filterBar.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      }, 200);
+      return;
+    }
+
+    // Services / other pages: scroll to the element with that id
+    const target = document.getElementById(hash);
+    if (target) {
+      setTimeout(() => {
+        const offset = navbar ? navbar.offsetHeight + 16 : 80;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }, 300);
+    }
+  })();
 
   /* ── PROJECT FILTER ──────────────────────────────────────── */
   const filterBtns = document.querySelectorAll('.filter-btn');
