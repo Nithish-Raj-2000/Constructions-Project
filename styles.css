@@ -3256,7 +3256,7 @@ html { overflow-x: hidden; }
   .brand-tagline { font-size: 0.5rem; letter-spacing: 0.18em; padding-left: 38px; }
 
   /* Hero section */
-  .hero-content { text-align: center; padding: 0 16px; }
+  .hero-content { text-align: center; padding: 48px 16px 0; }
   .hero-buttons { justify-content: center; flex-wrap: wrap; }
   .hero-floating-stats { justify-content: center; }
   .hero-badge { justify-content: center; }
@@ -3417,3 +3417,64 @@ html { overflow-x: hidden; }
   .footer-bottom-content { flex-direction: column; text-align: center; }
   .footer-bottom-links { justify-content: center; flex-wrap: wrap; gap: 12px; }
 }
+
+/* ======================================================================
+   GLOBAL POLISH — hover enhancements for all pages
+   ====================================================================== */
+
+/* ── AUTH PAGE FADE-IN ──────────────────────────────────────────────── */
+@keyframes authFadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+.auth-form-container { animation: authFadeIn 0.4s ease both; }
+
+/* ── BTN ACTIVE PRESS STATE ─────────────────────────────────────────── */
+.btn:active { transform: translateY(1px) scale(0.98) !important; transition: transform 0.1s, box-shadow 0.1s !important; }
+
+/* ── FORM INPUT HOVER ───────────────────────────────────────────────── */
+.form-group input:hover:not(:focus),
+.form-group textarea:hover:not(:focus),
+.form-group select:hover:not(:focus) { border-color: var(--gold); transition: border-color 0.2s; }
+
+/* ── HOME ABOUT IMAGE ZOOM ──────────────────────────────────────────── */
+.home-about-visual { overflow: hidden; border-radius: var(--radius-lg); }
+
+/* ── CONTACT FORM PANEL HOVER ───────────────────────────────────────── */
+.contact-form-wrap { transition: box-shadow 0.3s ease; }
+.contact-form-wrap:hover { box-shadow: 0 16px 48px rgba(0,0,0,0.08); }
+
+/* ── SELECT HOVER ───────────────────────────────────────────────────── */
+.form-group select { cursor: pointer; }
+
+/* ── PAGE BANNER TITLE SHIMMER ──────────────────────────────────────── */
+.page-banner-title { position: relative; display: inline-block; }
+
+/* ── HERO FLOATING STATS HOVER ──────────────────────────────────────── */
+.float-stat {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.float-stat:hover {
+  transform: translateY(-4px) scale(1.03);
+  border-color: rgba(245,166,35,0.3);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 20px rgba(245,166,35,0.1);
+}
+
+/* ── NAV LINK ACTIVE UNDERLINE ──────────────────────────────────────── */
+.nav-link.active {
+  color: var(--gold) !important;
+  font-weight: 600;
+}
+
+/* ── FORGOT PASSWORD LINK ───────────────────────────────────────────── */
+.forgot-link { transition: color 0.2s, letter-spacing 0.2s; }
+.forgot-link:hover { letter-spacing: 0.02em; }
+
+/* ── TERMS LINK ─────────────────────────────────────────────────────── */
+.terms-link { transition: color 0.2s, opacity 0.2s; }
+.terms-link:hover { opacity: 0.8; }
+
+/* ── CARD ACTION LINKS (auth footer / subtitle) ──────────────────────── */
+.auth-subtitle a, .auth-footer a { transition: color 0.2s, opacity 0.2s; }
+.auth-subtitle a:hover, .auth-footer a:hover { opacity: 0.8; }
+
+/* ── REDUCE EXCESS SECTION PADDING on consecutive same-BG sections ─── */
+.home-about + .home-services { padding-top: 70px; }
+.stats-section + .home-about { padding-top: 80px; }
