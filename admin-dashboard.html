@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -686,7 +686,7 @@
   <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
   <aside class="sidebar">
     <div class="sidebar-brand">
-      <img src="Stackly logo.png" alt="STACKLY" class="brand-img" style="height:32px;width:auto;">
+      <img src="images/Stackly logo.webp" alt="STACKLY" class="brand-img" style="height:32px;width:auto;">
       <div class="brand-sub">Admin Portal</div>
       <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close sidebar">
         <i class="fas fa-times"></i>
@@ -783,7 +783,7 @@
       <!-- Welcome Banner -->
       <div class="welcome-banner">
         <div class="welcome-text">
-          <h2 id="welcomeMsg">Good Morning 👋</h2>
+          <h2 id="welcomeMsg">Welcome Back 👋</h2>
           <p id="welcomeSub">Here's what's happening across your projects today</p>
         </div>
         <div class="welcome-badge">
@@ -1103,8 +1103,7 @@
         return first ? first.charAt(0).toUpperCase() + first.slice(1).toLowerCase() : 'User';
       }
       function getGreeting() {
-        const h = new Date().getHours();
-        return h < 12 ? 'Good Morning' : h < 17 ? 'Good Afternoon' : 'Good Evening';
+        return 'Welcome Back';
       }
       const displayName = getDisplayName(email);
       const nameInit    = displayName.charAt(0);

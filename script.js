@@ -704,17 +704,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!validateLEmail(true))    valid = false;
       if (!validateLPassword(true)) valid = false;
 
-      /* Remember Me checkbox */
-      const rememberEl  = document.getElementById('rememberMe');
-      const rememberErr = document.getElementById('rememberMeError');
-      if (rememberEl && !rememberEl.checked) {
-        rememberErr.textContent = 'Please check the checkbox to continue.';
-        valid = false;
-      } else {
-        if (rememberErr) rememberErr.textContent = '';
-      }
-
-      if (!valid) {
+if (!valid) {
         loginForm.querySelector('.field-error-state')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
