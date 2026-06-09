@@ -1973,26 +1973,31 @@ section { padding: var(--section-pad); }
 
 /* ===================== 24. AUTH PAGES ===================== */
 .auth-page {
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   display: flex;
   align-items: stretch;
   background: var(--dark-bg);
   padding-top: 80px;
 }
 .auth-split {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: calc(100vh - 80px);
+  display: flex;
   width: 100%;
+  height: calc(100vh - 80px);
 }
 .auth-visual {
   background: linear-gradient(145deg, #080808 0%, #111111 30%, #1a2040 60%, #0d0d1a 100%);
-  position: relative;
+  position: fixed;
+  top: 80px;
+  left: 0;
+  width: 50%;
+  height: calc(100vh - 80px);
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 60px 48px;
+  padding: 40px 48px;
+  z-index: 5;
 }
 .auth-visual-bg {
   position: absolute;
@@ -2015,34 +2020,39 @@ section { padding: var(--section-pad); }
   position: relative;
   z-index: 2;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 .auth-brand {
   display: flex;
   align-items: center;
   gap: 14px;
   justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 .auth-visual-title {
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
   font-weight: 900;
   color: var(--white);
   line-height: 1.2;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 .auth-visual-subtitle {
   font-size: 0.95rem;
   color: rgba(255,255,255,0.5);
-  line-height: 1.75;
+  line-height: 1.65;
   max-width: 360px;
-  margin: 0 auto 40px;
+  margin: 0 auto 20px;
 }
-.auth-features { text-align: left; display: flex; flex-direction: column; gap: 16px; }
+.auth-features { text-align: left; display: flex; flex-direction: column; gap: 10px; }
 .auth-feature-item {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 14px 18px;
+  gap: 12px;
+  padding: 10px 14px;
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: var(--radius-md);
@@ -2059,9 +2069,13 @@ section { padding: var(--section-pad); }
 .auth-form-side {
   background: var(--white);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 60px 48px;
+  padding: 28px 40px;
+  overflow-y: auto;
+  margin-left: 50%;
+  width: 50%;
+  height: calc(100vh - 80px);
 }
 .auth-form-container { width: 100%; max-width: 460px; }
 .auth-back-btn {
@@ -2077,13 +2091,13 @@ section { padding: var(--section-pad); }
   font-weight: 600;
   cursor: pointer;
   padding: 7px 14px;
-  margin-bottom: 28px;
+  margin-bottom: 14px;
   transition: color 0.2s, border-color 0.2s, background 0.2s;
   text-decoration: none;
 }
 .auth-back-btn i { font-size: 0.72rem; }
 .auth-back-btn:hover { color: var(--gold); border-color: var(--gold); background: rgba(245,166,35,0.05); }
-.auth-form-header { margin-bottom: 36px; }
+.auth-form-header { margin-bottom: 16px; }
 .auth-welcome {
   font-size: 0.75rem;
   font-weight: 600;
@@ -2094,14 +2108,14 @@ section { padding: var(--section-pad); }
   margin-bottom: 10px;
 }
 .auth-title {
-  font-size: 2rem;
+  font-size: 1.65rem;
   font-weight: 900;
   color: var(--charcoal);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 .auth-subtitle { font-size: 0.9rem; color: var(--gray-500); }
 .auth-subtitle a { color: var(--gold); font-weight: 600; }
-.auth-form { display: flex; flex-direction: column; gap: 20px; }
+.auth-form { display: flex; flex-direction: column; gap: 12px; }
 .auth-form .form-group label { font-size: 0.82rem; font-weight: 600; color: var(--charcoal); font-family: var(--font-accent); }
 .auth-form .form-group input,
 .auth-form .form-group select {
@@ -2235,10 +2249,7 @@ section { padding: var(--section-pad); }
 }
 /* ── PASSWORD REQUIREMENTS LIST ───────────────── */
 .pwd-requirements {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-top: 8px;
+  display: none;
 }
 .req-item {
   display: flex;
@@ -2309,7 +2320,7 @@ section { padding: var(--section-pad); }
   outline: none !important;
   box-shadow: none !important;
   background: transparent !important;
-  padding: 14px 16px;
+  padding: 10px 14px;
   font-size: 0.9rem;
   color: var(--charcoal);
   border-radius: 0 !important;
@@ -2351,8 +2362,8 @@ section { padding: var(--section-pad); }
   .timeline-item .timeline-card { grid-column: 2; grid-row: 1; direction: ltr !important; }
   .timeline-item > :last-child:not(.timeline-marker),
   .timeline-item > :first-child:not(.timeline-marker) { display: none; }
-  .auth-split { grid-template-columns: 1fr; }
   .auth-visual { display: none; }
+  .auth-form-side { margin-left: 0; width: 100%; }
 }
 
 @media (max-width: 900px) {
@@ -3379,9 +3390,8 @@ html { overflow-x: hidden; }
   .mvv-tabs { flex-wrap: wrap; }
 
   /* Auth pages */
-  .auth-split { grid-template-columns: 1fr; }
   .auth-visual { display: none; }
-  .auth-form-side { padding: 40px 24px; }
+  .auth-form-side { margin-left: 0; width: 100%; padding: 40px 24px; }
 }
 
 /* ======================================================================

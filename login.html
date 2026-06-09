@@ -12,9 +12,10 @@
   <link rel="stylesheet" href="styles.css">
   <style>
     /* Login-page tweaks */
+    html, body { height: 100%; overflow: hidden; }
     body { background: var(--dark-bg); }
 
-    .auth-page { padding-top: 80px; min-height: 100vh; }
+    .auth-page { padding-top: 80px; height: 100vh; overflow: hidden; }
 
     /* Animated construction lines on visual side */
     .auth-visual::before {
@@ -265,11 +266,11 @@
 
           </form>
 
-          <div class="auth-footer" style="margin-top:24px;">
+          <div class="auth-footer" style="margin-top:10px;">
             <p>New to STACKLY? <a href="signup.html">Create a free account</a></p>
           </div>
 
-          <p style="text-align:center;margin-top:20px;font-size:0.72rem;color:var(--gray-400);font-family:var(--font-accent);">
+          <p style="text-align:center;margin-top:8px;font-size:0.72rem;color:var(--gray-400);font-family:var(--font-accent);">
             By signing in you agree to our <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="terms-link">Privacy Policy</a>.
           </p>
         </div>

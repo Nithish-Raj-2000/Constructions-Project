@@ -11,8 +11,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
   <style>
+    html, body { height: 100%; overflow: hidden; }
     body { background: var(--dark-bg); }
-    .auth-page { padding-top: 80px; min-height: 100vh; }
+    .auth-page { padding-top: 80px; height: 100vh; overflow: hidden; }
 
     /* Diagonal animated lines */
     .auth-visual::before {
@@ -69,13 +70,13 @@
     .role-cards {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin: 8px 0 4px;
+      gap: 8px;
+      margin: 6px 0 4px;
     }
     .role-card-option {
       border: 2px solid var(--gray-200);
       border-radius: var(--radius-md);
-      padding: 16px 14px;
+      padding: 10px 12px;
       cursor: pointer;
       transition: var(--transition);
       text-align: center;
@@ -91,7 +92,7 @@
       border-color: var(--gold);
       background: rgba(245,166,35,0.05);
     }
-    .role-card-option i { font-size: 1.6rem; color: var(--gray-400); margin-bottom: 8px; display: block; transition: var(--transition); }
+    .role-card-option i { font-size: 1.2rem; color: var(--gray-400); margin-bottom: 4px; display: block; transition: var(--transition); }
     .role-card-option:has(input:checked) i,
     .role-card-option.selected i { color: var(--gold); }
     .role-card-option span { font-size: 0.88rem; font-weight: 600; color: var(--charcoal); display: block; }
@@ -296,18 +297,32 @@
               <span class="field-error" id="signupRoleError" role="alert"></span>
             </div>
 
-            <!-- Full Name -->
-            <div class="form-group">
-              <label for="signupName">Full Name *</label>
-              <div class="field-wrap">
-                <div class="field-icon-box">
-                  <i class="fas fa-user" aria-hidden="true"></i>
+            <!-- Full Name + Phone row -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="signupName">Full Name *</label>
+                <div class="field-wrap">
+                  <div class="field-icon-box">
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                  </div>
+                  <input type="text" id="signupName" name="name"
+                         placeholder="John Doe" required
+                         autocomplete="name" aria-required="true">
                 </div>
-                <input type="text" id="signupName" name="name"
-                       placeholder="John Doe" required
-                       autocomplete="name" aria-required="true">
+                <span class="field-error" id="signupNameError" role="alert"></span>
               </div>
-              <span class="field-error" id="signupNameError" role="alert"></span>
+              <div class="form-group">
+                <label for="signupPhone">Phone Number *</label>
+                <div class="field-wrap">
+                  <div class="field-icon-box">
+                    <i class="fas fa-phone-alt" aria-hidden="true"></i>
+                  </div>
+                  <input type="tel" id="signupPhone" name="phone"
+                         placeholder="9876543210" required
+                         autocomplete="tel" aria-required="true">
+                </div>
+                <span class="field-error" id="signupPhoneError" role="alert"></span>
+              </div>
             </div>
 
             <!-- Email -->
@@ -322,20 +337,6 @@
                        autocomplete="email" aria-required="true">
               </div>
               <span class="field-error" id="signupEmailError" role="alert"></span>
-            </div>
-
-            <!-- Phone -->
-            <div class="form-group">
-              <label for="signupPhone">Phone Number *</label>
-              <div class="field-wrap">
-                <div class="field-icon-box">
-                  <i class="fas fa-phone-alt" aria-hidden="true"></i>
-                </div>
-                <input type="tel" id="signupPhone" name="phone"
-                       placeholder="9876543210" required
-                       autocomplete="tel" aria-required="true">
-              </div>
-              <span class="field-error" id="signupPhoneError" role="alert"></span>
             </div>
 
             <!-- Password -->
@@ -418,11 +419,11 @@
 
           </form>
 
-          <div class="auth-footer" style="margin-top:20px;">
+          <div class="auth-footer" style="margin-top:8px;">
             <p>Already have an account? <a href="login.html">Sign in</a></p>
           </div>
 
-          <p style="text-align:center;margin-top:16px;font-size:0.72rem;color:var(--gray-400);font-family:var(--font-accent);">
+          <p style="text-align:center;margin-top:6px;font-size:0.72rem;color:var(--gray-400);font-family:var(--font-accent);">
             Your information is protected by 256-bit encryption.
             <i class="fas fa-lock" style="color:var(--gold);" aria-hidden="true"></i>
           </p>
